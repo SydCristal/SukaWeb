@@ -1,0 +1,22 @@
+body {
+		margin: 0;
+		min-height: 100vh;
+		min-width: 100vw;
+}
+
+#root {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+		min-width: 100vw;
+		justify-content: center;
+}
+
+* {
+		box-sizing: border-box;
+		color: rgba(26, 29, 28, 1);
+		font-weight: 400;
+		text-align: center;
+		border-color: rgba(26, 29, 28, 1);
+		font-family: Inter;
+}

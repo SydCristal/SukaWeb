@@ -1,0 +1,5 @@
+export { LightBlock } from './LightBlock'
+export { InstalationsBlock } from './InstalationsBlock'
+export { SideSection } from './SideSection'
+export { MiddleSection } from './MiddleSection'
+export { default } from './SettingsBlock'
