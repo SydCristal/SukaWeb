@@ -10,6 +10,10 @@ export const Emits = {
     socket.emit('requestConfiguration')
   },
 
+  createConfiguration: configuration => {
+		socket.emit('createConfiguration', configuration)
+	},
+
   updateConfiguration: configuration => {
     socket.emit('updateConfiguration', configuration)
   },

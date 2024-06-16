@@ -30,8 +30,8 @@ const Select = ({ label, options, value, onChange, disabled }) => {
 						setIncrement(inc)
 				}
 				
-				prevOptionRef.current = selectedOptionRef.current || optionNodes[prevIndex]
-				selectedOptionRef.current = optionNodes[selectedIndex]
+				prevOptionRef.current = selectedOptionRef.current || optionNodes[prevIndex] || optionNodes[0]
+				selectedOptionRef.current = optionNodes[selectedIndex] || optionNodes[0]
 				const prevOption = prevOptionRef.current
 				const selectedOption = selectedOptionRef.current
 
