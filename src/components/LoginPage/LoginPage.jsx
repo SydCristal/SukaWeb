@@ -1,4 +1,4 @@
-﻿﻿import styled from 'styled-components'
+﻿import styled from 'styled-components'
 import { useLoadingContext } from '../../contexts'
 import { Input } from '../Common'
 import { useState } from 'react'
@@ -6,46 +6,45 @@ import { C, F } from '../../utils'
 import { Emits } from '../../sockets'
 
 const LoginPage = () => {
-		const [userName, setUserName] = useState('Syd Cristal')
-		const [password, setPassword] = useState('HOBOROBOT666')
-		const { setLoading } = useLoadingContext()
+	const [userName, setUserName] = useState('Syd Cristal')
+	const [password, setPassword] = useState('HOBOROBOT666')
+	const { setLoading } = useLoadingContext()
 
-		const submit = () => {
-				setLoading(true)
-				Emits.connect({ userName, password })
-		}
+	const submit = () => {
+		setLoading(true)
+		Emits.connect({ userName, password })
+	}
 
-		const onLogoClick = () => {
-				console.log('Zorg!');
-				Emits.connect({ newUser: { userName, password } })
-		}
+	const onLogoClick = () => {
+		Emits.connect({ newUser: { userName, password } })
+	}
 
-		return (
-				<LoginForm>
-						<div>
-								<LoginIcon src={F.getUrl('icons', 'login', false)} alt='login' onClick={onLogoClick} />
-								<LoginTitle src={F.getUrl('icons', 'title', false)} alt='suka-rental' />
-						</div>
-						<div>
-								<LoginHeading>hey there!</LoginHeading>
-								<InputGroup>
-										<Input
-												value={userName}
-												onChange={setUserName}
-												placeholder='login' />
-										<Input
-												value={password}
-												onChange={setPassword}
-												placeholder='password' />
-								</InputGroup>
-								<Submit
-										type='button'
-										onClick={submit}>
-										Submit
-								</Submit>
-						</div>
-				</LoginForm>
-		)
+	return (
+		<LoginForm>
+			<div>
+				<LoginIcon src={F.getUrl('icons', 'login', false)} alt='login' onClick={onLogoClick} />
+				<LoginTitle src={F.getUrl('icons', 'title', false)} alt='suka-rental' />
+			</div>
+			<div>
+				<LoginHeading>hey there!</LoginHeading>
+				<InputGroup>
+					<Input
+						value={userName}
+						onChange={setUserName}
+						placeholder='login' />
+					<Input
+						value={password}
+						onChange={setPassword}
+						placeholder='password' />
+				</InputGroup>
+				<Submit
+					type='button'
+					onClick={submit}>
+					Submit
+				</Submit>
+			</div>
+		</LoginForm>
+	)
 }
 
 const LoginForm = styled.form`
@@ -136,10 +135,10 @@ const Submit = styled.button`
 		};
 		${C.IS_MOBILE} {
 				width: 141px;
-				height: 43px; 
-				border-radius: 20px; 
+				height: 43px;
+				border-radius: 20px;
 				border-width: 1px;
-				font-size: 16px; 
+				font-size: 16px;
 		};
 `
 

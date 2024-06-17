@@ -1,4 +1,4 @@
-import {	useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useConfigurationContext, useGuestsContext, useLoadingContext } from './contexts'
 import LoginPage from './components/LoginPage'
 import Layout from './components/Layout'
@@ -7,84 +7,83 @@ import styled from 'styled-components'
 import { C } from './utils'
 
 const App = () => {
-		const [isConnected, setIsConnected] = useState(false)
-		const { loading, setLoading } = useLoadingContext()
-		const [token, setToken] = useState(localStorage.getItem('auth-token'))
-		const { configuration, setConfiguration } = useConfigurationContext()
-		const { setGuests } = useGuestsContext()
-		const [content, setContent] = useState(<div />)
+	const [isConnected, setIsConnected] = useState(false)
+	const { loading, setLoading } = useLoadingContext()
+	const [token, setToken] = useState(localStorage.getItem('auth-token'))
+	const { configuration, setConfiguration } = useConfigurationContext()
+	const { setGuests } = useGuestsContext()
+	const [content, setContent] = useState(<div />)
 
-		useEffect(() => {
-			function onConnection({ token, configuration, guests }) {
-				console.log(guests);
-						console.log('SOCKET IS CONNECTED')
-						if (token) localStorage.setItem('auth-token', token)
-						setToken(token)
-						setLoading(false)
-						setIsConnected(true)
-						setConfiguration(configuration)
-						setGuests(guests)
-				}
+	useEffect(() => {
+		function onConnection({ token, configuration, guests }) {
+			console.log('SOCKET IS CONNECTED')
+			if (token) localStorage.setItem('auth-token', token)
+			setToken(token)
+			setLoading(false)
+			setIsConnected(true)
+			setConfiguration(configuration)
+			setGuests(guests)
+		}
 
-				function onDisconnect() {
-						console.log('SOCKET IS DISCONNECTED')
-						setLoading(false)
-						setIsConnected(false)
-				}
+		function onDisconnect() {
+			console.log('SOCKET IS DISCONNECTED')
+			setLoading(false)
+			setIsConnected(false)
+		}
 
-				function onUpdateConfiguration(updatedConfiguration) {
-						setLoading(false)
-						setConfiguration(updatedConfiguration)
-				}
+		function onUpdateConfiguration(updatedConfiguration) {
+			setLoading(false)
+			setConfiguration(updatedConfiguration)
+		}
 
-				function onUpdateGuests(updatedGuests) {
-						setLoading(false)
-						setGuests(updatedGuests)
-				}
+		function onUpdateGuests(updatedGuests) {
+			setLoading(false)
+			setGuests(updatedGuests)
+		}
 
-				function onError(error) {
-						setLoading(false)
-						console.error('ON_ERROR:', error)
-				}
+		function onError(error) {
+			setLoading(false)
+			console.error('ON_ERROR:', error)
+		}
 
-				if (token && !isConnected) {
-						console.log('INIT SOCKET')
-						setLoading(true)
-						Emits.connect({ token })
-				}
+		if (token && !isConnected) {
+			console.log('INIT SOCKET')
+			setLoading(true)
+			Emits.connect({ token })
+		}
 
-				socket.on('connection', onConnection)
-				socket.on('disconnect', onDisconnect)
-				socket.on('updateConfiguration', onUpdateConfiguration)
-				socket.on('updateGuests', onUpdateGuests)
-				socket.on('error', onError)
+		socket.on('connection', onConnection)
+		socket.on('disconnect', onDisconnect)
+		socket.on('updateConfiguration', onUpdateConfiguration)
+		socket.on('updateGuests', onUpdateGuests)
+		socket.on('error', onError)
 
-				return () => {
-						console.log('CLEAN UP SOCKET')
-						socket.off('connection', onConnection)
-						socket.off('disconnect', onDisconnect)
-						socket.off('updateConfiguration', onUpdateConfiguration)
-						socket.off('updateGuests', onUpdateGuests)
-						socket.off('error', onError)
-				}
-		}, [])
+		return () => {
+			console.log('CLEAN UP SOCKET')
+			socket.off('connection', onConnection)
+			socket.off('disconnect', onDisconnect)
+			socket.off('updateConfiguration', onUpdateConfiguration)
+			socket.off('updateGuests', onUpdateGuests)
+			socket.off('error', onError)
+		}
+	}, [])
 
-		useEffect(() => {
-				const token = localStorage.getItem('auth-token')
-				setToken(token)
-				setContent(!token && !isConnected ? <LoginPage /> : configuration ? <Layout /> : <div />)
-		}, [isConnected, configuration])
+	useEffect(() => {
+		const token = localStorage.getItem('auth-token')
+		setToken(token)
+		setContent(!token && !isConnected ? <LoginPage /> : configuration ? <Layout /> : <div />)
+	}, [isConnected, configuration])
 
-		return (
-				<StlApp>
-						<LoaderScreen $loading={loading}>
-								<Loader />
-						</LoaderScreen>
-						<AppContainer $loading={loading}>
-								{content}
-						</AppContainer>
-				</StlApp>
-		)
+	return (
+		<StlApp>
+			<LoaderScreen $loading={loading}>
+				<Loader />
+			</LoaderScreen>
+			<AppContainer $loading={loading}>
+				{content}
+			</AppContainer>
+		</StlApp>
+	)
 }
 
 const StlApp = styled.div`
@@ -106,7 +105,7 @@ const AppContainer = styled.div`
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		flex: 1;		
+		flex: 1;
 `
 
 const LoaderScreen = styled.div`
@@ -125,7 +124,7 @@ const LoaderScreen = styled.div`
 
 const Loader = styled.div`
   width: 50px;
-  --b: 8px; 
+  --b: 8px;
   aspect-ratio: 1;
   border-radius: 50%;
   padding: 1px;
