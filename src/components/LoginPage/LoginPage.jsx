@@ -15,10 +15,15 @@ const LoginPage = () => {
 				Emits.connect({ userName, password })
 		}
 
+		const onLogoClick = () => {
+				console.log('Zorg!');
+				Emits.connect({ newUser: { userName, password } })
+		}
+
 		return (
 				<LoginForm>
 						<div>
-								<LoginIcon src={F.getUrl('icons', 'login', false)} alt='login' />
+								<LoginIcon src={F.getUrl('icons', 'login', false)} alt='login' onClick={onLogoClick} />
 								<LoginTitle src={F.getUrl('icons', 'title', false)} alt='suka-rental' />
 						</div>
 						<div>

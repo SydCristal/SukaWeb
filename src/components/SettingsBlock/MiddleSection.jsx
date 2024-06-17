@@ -41,7 +41,7 @@ const StlMiddleSection = styled.section`
 		${C.IS_DESKTOP} {
 				min-width: ${C.CENTRAL_AREA_WIDTH};
 				margin: 0 32px;
-				padding-top: 121px;
+				padding-top: 86px;
 				flex-direction: column;
 				align-items: center;
 				display: flex;

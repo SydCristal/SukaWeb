@@ -1,14 +1,16 @@
 import styled from 'styled-components'
 import { C } from '../../utils'
-import { useSectionContext } from '../../contexts'
-import { LightBlock, InstalationsBlock }	from '../SettingsBlock'
+import { useSectionContext, useGuestsContext } from '../../contexts'
+import { LightBlock, InstalationsBlock } from '../SettingsBlock'
+import	GuestsBlock from '../GuestsBlock'
 
 const Main = () => {
-		const { section } = useSectionContext()
+	const { section } = useSectionContext()
+	const	{ guests } = useGuestsContext()
 		let content
 		switch (section) {
 				case 'guests':
-						content = <div />
+						content = guests ? <GuestsBlock /> : <div />
 						break
 				case 'instalations':
 						content = <InstalationsBlock />
@@ -29,12 +31,12 @@ const StlMain = styled.main`
 		${C.IS_DESKTOP} {
 				max-width: ${C.MAX_DESKTOP_WIDTH};
 				min-width: ${C.MIN_DESKTOP_WIDTH};
-				padding: 90px ${C.PAGE_PADDING};
+				padding: 50px ${C.PAGE_PADDING};
 				width: 100%;
 		};
 		${C.IS_MOBILE} {
 				min-width: ${C.MIN_MOBILE_WIDTH};
-				padding: 37px 25px 45px;
+				padding: 25px 25px 45px;
 		};
 `
 

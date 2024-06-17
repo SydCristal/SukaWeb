@@ -40,8 +40,8 @@ const StlHeader = styled.header`
 				max-width: ${C.MAX_DESKTOP_WIDTH};
 				min-width: ${C.MIN_DESKTOP_WIDTH};
 				width: 100%;
-				padding: 64px 5% 0;
-				height: 217px;
+				padding: 60px 5% 0;
+				height: 180px;
 		};
 		${C.IS_MOBILE} {
 				min-width: ${C.MIN_MOBILE_WIDTH};

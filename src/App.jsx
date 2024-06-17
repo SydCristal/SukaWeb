@@ -15,14 +15,15 @@ const App = () => {
 		const [content, setContent] = useState(<div />)
 
 		useEffect(() => {
-				function onConnection({ token, configuration, guests }) {
+			function onConnection({ token, configuration, guests }) {
+				console.log(guests);
 						console.log('SOCKET IS CONNECTED')
 						if (token) localStorage.setItem('auth-token', token)
 						setToken(token)
 						setLoading(false)
 						setIsConnected(true)
 						setConfiguration(configuration)
-						if (guests) setGuests(guests)
+						setGuests(guests)
 				}
 
 				function onDisconnect() {

@@ -10,17 +10,25 @@ export const Emits = {
     socket.emit('requestConfiguration')
   },
 
-  createConfiguration: configuration => {
-		socket.emit('createConfiguration', configuration)
-	},
+  //createUser = user => {
+		//		socket.emit('createUser', user)
+	//},
+
+  //createConfiguration: configuration => {
+		//  socket.emit('createConfiguration', configuration)
+  //},
+
+  //updateUser: userData => {
+  //  socket.emit('updateUser', userData)
+  //},
 
   updateConfiguration: configuration => {
     socket.emit('updateConfiguration', configuration)
   },
 
-  requestGuests: () => {
-    socket.emit('requestGuests')
-  },
+  //requestGuests: () => {
+  //  socket.emit('requestGuests')
+  //},
 
   updateGuests: guests => {
     socket.emit('updateGuests', guests)

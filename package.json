@@ -1,6 +1,7 @@
 {
   "name": "suka-web",
   "version": "0.1.0",
+  "homepage": "https://sukarental.space",
   "private": true,
   "dependencies": {
     "lodash": "^4.17.21",

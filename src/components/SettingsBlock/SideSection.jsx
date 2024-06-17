@@ -23,12 +23,12 @@ const StlSideSection = styled.section`
 		flex-direction: column;
 		align-items: center;
 		${C.IS_DESKTOP} {
-				height: 606px;
+				height: 550px;
 				border-radius: 30px;
 				max-width: ${C.MAX_SIDE_WIDTH};
 				min-width: ${C.MIN_SIDE_WIDTH};
 				width: 100%;
-				padding: 32px 32px 92px 32px;
+				padding: 32px 32px 70px 32px;
 		};
 		${C.IS_MOBILE} {
 				padding: 8px 20px 20px;
@@ -47,7 +47,7 @@ const StlSideSection = styled.section`
 const Heading = styled.h2`
 		${C.HEADING_STYLES};
 		${C.IS_DESKTOP} {
-				margin-bottom: 90px;
+				margin-bottom: 55px;
 		};
 		${C.IS_MOBILE} {
 				font-size: 22px;
