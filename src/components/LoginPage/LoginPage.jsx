@@ -39,7 +39,7 @@ const LoginPage = ({ loginError, setLoginError, passwordError, setPasswordError 
 				<LoginHeading>hey there!</LoginHeading>
 				<ErrorContainer>
 					{loginError === 'USER_NOT_FOUND' && 'user not found'}
-					{loginError === 'USER_IS_INNACTIVE' && 'user is innactive'}
+					{loginError === 'USER_IS_INACTIVE' && 'user is innactive'}
 				</ErrorContainer>
 				<InputGroup>
 					<Input
@@ -55,7 +55,7 @@ const LoginPage = ({ loginError, setLoginError, passwordError, setPasswordError 
 				</InputGroup>
 				<ErrorContainer>
 					{passwordError === 'PASSWORD_IS_INCORRECT' && 'password is incorrect'}
-					{passwordError === 'GUEST_IS_INNACTIVE' && 'guest is innactive'}
+					{passwordError === 'GUEST_IS_INACTIVE' && 'guest is innactive'}
 				</ErrorContainer>
 				<Submit
 					type='button'
