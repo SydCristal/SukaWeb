@@ -2,21 +2,22 @@ import styled from 'styled-components'
 import { C, F } from '../../utils'
 import { useState } from 'react'
 import { Input, Switch } from '../Common'
-import { useGuestsContext } from '../../contexts'
+import { useGuestsContext, useConfigurationContext } from '../../contexts'
 import { Emits } from '../../sockets'
 
 const GuestRecord = ({ label = 'new guest', password = '', active, isNew = false, _id, setNewGuest }) => {
-	const { guests, setGuests } = useGuestsContext()
+	const { guests } = useGuestsContext()
 	const [isEditing, setIsEditing] = useState(isNew)
 	const [labelValue, setLabelValue] = useState(label)
 	const [passwordValue, setPasswordValue] = useState(password)
 	const [labelIsNotUnique, setLabelIsNotUnique] = useState(false)
 	const [passwordIsNotUnique, setPasswordIsNotUnique] = useState(false)
 	const [passwordIsNotValid, setPasswordIsNotValid] = useState(false)
+	const { configuration: { password: masterPassword } } = useConfigurationContext()
 
 	const validate = () => {
 		const labelIsUnique = !guests.find(guest => guest.label === labelValue && guest._id !== _id)
-		const passwordIsUnique = !guests.find(guest => guest.password === passwordValue && guest._id !== _id)
+		const passwordIsUnique = passwordValue !== masterPassword && !guests.find(guest => guest.password === passwordValue && guest._id !== _id)
 		const passWordIsValid = passwordValue.length >= 6
 
 		setLabelIsNotUnique(!labelIsUnique)

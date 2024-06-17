@@ -15,15 +15,17 @@ const App = () => {
 	const [content, setContent] = useState(<div />)
 	const [loginError, setLoginError] = useState(null)
 	const [passwordError, setPasswordError] = useState(null)
+	const [password, setPassword] = useState('')
 
 	useEffect(() => {
-		function onConnection({ token, configuration, guests }) {
+		function onConnection(data) {
+			const { token, configuration, guests, password } = data
 			console.log('SOCKET IS CONNECTED')
 			if (token) localStorage.setItem('auth-token', token)
 			setToken(token)
 			setLoading(false)
 			setIsConnected(true)
-			setConfiguration(configuration)
+			setConfiguration({ password, ...configuration })
 			setGuests(guests)
 		}
 
