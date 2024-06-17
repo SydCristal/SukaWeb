@@ -13,6 +13,8 @@ const App = () => {
 	const { configuration, setConfiguration } = useConfigurationContext()
 	const { setGuests } = useGuestsContext()
 	const [content, setContent] = useState(<div />)
+	const [loginError, setLoginError] = useState(null)
+	const [passwordError, setPasswordError] = useState(null)
 
 	useEffect(() => {
 		function onConnection({ token, configuration, guests }) {
@@ -43,6 +45,21 @@ const App = () => {
 
 		function onError(error) {
 			setLoading(false)
+			if (error.message) {
+				switch (error.message) {
+					case 'USER_NOT_FOUND':
+					case 'USER_IS_INACTIVE':
+						setLoginError(error.message)
+						break
+					case 'PASSWORD_IS_INCORRECT':
+					case 'GUEST_IS_INACTIVE':
+						setPasswordError(error.message)
+						break
+					default:
+						console.error('ERROR:', error.message)
+						break
+				}
+			}
 			console.error('ON_ERROR:', error)
 		}
 
@@ -68,11 +85,18 @@ const App = () => {
 		}
 	}, [])
 
+	const loginPageCfg = {
+		loginError,
+		setLoginError,
+		passwordError,
+		setPasswordError
+	}
+
 	useEffect(() => {
 		const token = localStorage.getItem('auth-token')
 		setToken(token)
-		setContent(!token && !isConnected ? <LoginPage /> : configuration ? <Layout /> : <div />)
-	}, [isConnected, configuration])
+		setContent(!token && !isConnected ? <LoginPage {...loginPageCfg} /> : configuration ? <Layout /> : <div />)
+	}, [isConnected, configuration, loginError, passwordError])
 
 	return (
 		<StlApp>

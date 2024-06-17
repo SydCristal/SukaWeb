@@ -82,13 +82,13 @@ const GuestRecord = ({ label = 'new guest', password = '', active, isNew = false
 		<StlGuestRecord>
 			<div>
 				{isEditing ?
-				<LabelInput value={labelValue} onChange={onChangeLabel} /> :
+				<LabelInput $highlighted={labelIsNotUnique} value={labelValue} onChange={onChangeLabel} /> :
 				<GuestLabel $active={active}>{labelValue}</GuestLabel>}
 				{!isNew && <Switch value={active} onChange={onToggleActive} label={active ? 'active' : 'inactive'} />}
 			</div>
 			<div>
 				{isEditing ?
-				<LabelInput value={passwordValue} onChange={onChangePassword} placeholder='set password' /> :
+				<LabelInput $highlighted={passwordIsNotUnique || passwordIsNotValid} value={passwordValue} onChange={onChangePassword} placeholder='set password' /> :
 				<GuestLabel $active={active}>{passwordValue}</GuestLabel>}
 				{isEditing ?
 					<GuestControls>
@@ -178,6 +178,7 @@ const LabelInput = styled(Input)`
 	font-size: 26px;
 	width: 250px;
 	margin: 0;
+	${({ $highlighted }) => $highlighted && 'border-color: red !important'};
 	${C.IS_MOBILE} {
 		height: 35px;
 		min-height: 35px;

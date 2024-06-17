@@ -18,6 +18,7 @@ const Input = ({ onChange, ...restProps }) => {
 }
 
 const StlInput = styled.input`
+		${({ $highlighted }) => $highlighted && 'border-color: red !important'};
 		background-color: transparent;
 		text-align: center;
 		padding: 0px;
