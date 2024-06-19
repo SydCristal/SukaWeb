@@ -15,13 +15,12 @@ export const MAX_SIDE_WIDTH = '486px'
 export const MIN_SIDE_WIDTH = '422px'
 export const HEADING_STYLES = css`
 		font-family: Outfit;
-		font-size: 36px;
-		line-height: 45px;
+		font-size: 27px;
+		line-height: 34px;
 		margin: 0;
 `
 export const LABEL_STYLES = css`
-		font-size: 24px;
-		line-height: 28px;
+		font-size: 18px;
 `
 export const SETTINGS_BLOCK_STYLES = css`
 		display: flex;

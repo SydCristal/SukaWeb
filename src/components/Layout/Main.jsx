@@ -31,7 +31,7 @@ const StlMain = styled.main`
 		${C.IS_DESKTOP} {
 				max-width: ${C.MAX_DESKTOP_WIDTH};
 				min-width: ${C.MIN_DESKTOP_WIDTH};
-				padding: 50px ${C.PAGE_PADDING};
+				padding: 35px ${C.PAGE_PADDING};
 				width: 100%;
 		};
 		${C.IS_MOBILE} {

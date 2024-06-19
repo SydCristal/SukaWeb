@@ -23,12 +23,12 @@ const StlSideSection = styled.section`
 		flex-direction: column;
 		align-items: center;
 		${C.IS_DESKTOP} {
-				height: 550px;
+				height: 535px;
 				border-radius: 30px;
 				max-width: ${C.MAX_SIDE_WIDTH};
 				min-width: ${C.MIN_SIDE_WIDTH};
 				width: 100%;
-				padding: 32px 32px 70px 32px;
+				padding: 32px 32px 80px;
 		};
 		${C.IS_MOBILE} {
 				padding: 8px 20px 20px;

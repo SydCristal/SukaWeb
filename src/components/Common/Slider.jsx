@@ -61,9 +61,9 @@ const SliderContainer = styled.div`
 `
 
 const SliderLabel = styled.label`
-		${C.LABEL_STYLES};
 		${C.IS_DESKTOP} {
-				margin-bottom: 23px;
+			font-size: 20px;
+			margin-bottom: 28px;
 		};
 		${C.IS_MOBILE} {
 				margin-bottom: 10px;

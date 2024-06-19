@@ -80,7 +80,7 @@ const GuestRecord = ({ label = 'new guest', password = '', active, isNew = false
 	}
 
 	return (
-		<StlGuestRecord>
+		<StlGuestRecord $active={active}>
 			<div>
 				{isEditing ?
 				<LabelInput $highlighted={labelIsNotUnique} value={labelValue} onChange={onChangeLabel} /> :
@@ -122,6 +122,8 @@ const GuestRecord = ({ label = 'new guest', password = '', active, isNew = false
 
 const StlGuestRecord = styled.div`
 	border: ${C.BORDER};
+	${({ $active }) => $active ? `border-color: ${C.COLOR_BLACK}` : `border-color: #B3B3B3`};
+	transition: border-color 0.5s;
 	border-radius: 30px;
 	padding: 25px 30px;
 	padding-bottom: 10px;
@@ -168,6 +170,7 @@ const GuestLabel = styled.h4`
 	font-size: 26px;
 	margin: 0;
 	opacity: ${({ $active }) => $active ? 1 : 0.5};
+	transition: opacity 0.5s;
 	${C.IS_MOBILE} {
 		font-size: 18px;
 	};

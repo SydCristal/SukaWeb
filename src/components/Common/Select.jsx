@@ -106,7 +106,7 @@ const SelectContainer = styled.div`
 		transition: opacity 0.5s ease-in-out;
 		opacity: ${({ $disabled }) => $disabled ? 0.5 : 1};
 		${C.IS_DESKTOP} {
-				width: ${C.CENTRAL_AREA_WIDTH};
+				width: fit-content;
 		};
 		${C.IS_MOBILE} {
 				width: 203px;
@@ -115,9 +115,9 @@ const SelectContainer = styled.div`
 
 const SelectLabel = styled.div`
 		${C.IS_DESKTOP} {
-				margin-bottom: 22px;
-				font-size: 22px;
-				line-height: 26px;
+				font-size: 27px;
+				line-height: 34px;
+				font-family: Outfit;
 		};
 		${C.IS_MOBILE} {
 				margin-bottom: 9px;
@@ -140,8 +140,8 @@ const SelectInput = styled.div`
 		${C.IS_DESKTOP} {
 				border-radius: 36px;
 				margin: 0 10px;
-				width: 272px;
-				height: 76px;
+				width: 196px;
+				height: 55px;
 		};
 		${C.IS_MOBILE} {
 				border-radius: 20px;
@@ -154,8 +154,8 @@ const SelectInput = styled.div`
 
 const SelectControl = styled.div`
 		${C.IS_DESKTOP} {
-				width: 44px;
-				height: 44px;
+				width: 20px;
+				height: 20px;
 		};
 		${C.IS_MOBILE} {
 				width: 24px;
@@ -168,8 +168,8 @@ const SelectControl = styled.div`
 				content: '';
 				box-sizing: border-box;
 				${C.IS_DESKTOP} {
-						height: 44px;
-						border: 22px solid transparent;
+						height: 20px;
+						border: 10px solid transparent;
 				};
 				${C.IS_MOBILE} {
 						height: 24px;
@@ -180,7 +180,7 @@ const SelectControl = styled.div`
 			justify-content: flex-end;
 			&:after {
 						${C.IS_DESKTOP} {
-								border-right: 38px solid ${C.COLOR_BLACK};
+								border-right: 17px solid ${C.COLOR_BLACK};
 						};
 						${C.IS_MOBILE} {
 								border-right: 21px solid ${C.COLOR_BLACK};
@@ -191,7 +191,7 @@ const SelectControl = styled.div`
 			justify-content: flex-start;
 			&:after {
 						${C.IS_DESKTOP} {
-								border-left: 38px solid ${C.COLOR_BLACK};
+								border-left: 17px solid ${C.COLOR_BLACK};
 						};
 						${C.IS_MOBILE} {
 								border-left: 21px solid ${C.COLOR_BLACK};
@@ -211,7 +211,7 @@ const SelectOption = styled.div`
 		display: flex;
 		z-index: ${({ $selected }) => $selected ? 1 : 0};
 		${C.IS_DESKTOP} {
-				font-size: 28px;
+				font-size: 20px;
 		};
 		${C.IS_MOBILE} {
 				font-size: 16px;

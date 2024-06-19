@@ -41,12 +41,15 @@ const StlMiddleSection = styled.section`
 		${C.IS_DESKTOP} {
 				min-width: ${C.CENTRAL_AREA_WIDTH};
 				margin: 0 32px;
-				padding-top: 86px;
+				padding-top: 36px;
 				flex-direction: column;
 				align-items: center;
 				display: flex;
 				&:first-child {
 						display: none;
+				};
+				> div:first-child {
+					margin-bottom: 74px;
 				};
 		};
 `
@@ -56,18 +59,21 @@ const SelectContainer = styled.div`
 				margin-bottom: 5px;
 		};
 		${C.IS_DESKTOP} {
-				margin-bottom: 16px;
+				margin-bottom: 17px;
+				> div {
+					height: 142px;
+					justify-content: space-between;
+				};
 		};
 `
 
 const Toggle = styled.button`
 		border: ${C.BORDER} ${C.COLOR_BLACK};
 		${C.IS_DESKTOP} {
-				width: 128px;
-				height: 54px;
+				width: 102px;
+				height: 45px;
 				border-radius: 36px;
-				margin-bottom: 28px;
-				font-size: 28px;
+				font-size: 20px;
 		};
 		${C.IS_MOBILE} {
 				width: 62px;

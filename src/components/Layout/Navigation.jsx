@@ -3,113 +3,113 @@ import { useConfigurationContext, useSectionContext, useGuestsContext } from '..
 import { C } from '../../utils'
 
 const Navigation = () => {
-		const { configuration } = useConfigurationContext()
-		const { lightSettings, instalationSettings } = configuration
-		const { guests } = useGuestsContext()
-		const { section, setSection } = useSectionContext()
-		const sections = []
-		if (lightSettings) sections.push('light')
-		if (instalationSettings) sections.push('instalations')
-		if (guests) sections.push('guests')
-		const selectedSection = section || (sections.length && sections[0])
+	const { configuration } = useConfigurationContext()
+	const { lightSettings, instalationSettings } = configuration
+	const { guests } = useGuestsContext()
+	const { section, setSection } = useSectionContext()
+	const sections = []
+	if (lightSettings) sections.push('light')
+	if (instalationSettings) sections.push('instalations')
+	if (guests) sections.push('guests')
+	const selectedSection = section || (sections.length && sections[0])
 
-		return (
-				<StlNavigation>
-						<TabContainer>
-								{sections.map((sectionName, i) => {
-										let position = 'center'
+	return (
+		<StlNavigation>
+			<TabContainer>
+				{sections.map((sectionName, i) => {
+					let position = 'center'
 
-										if (sections.length > 1) {
-												if (i === 0) position = 'left'
-												if (i === sections.length - 1) position = 'right'
-										}
+					if (sections.length > 1) {
+						if (i === 0) position = 'left'
+						if (i === sections.length - 1) position = 'right'
+					}
 
-										const active = selectedSection === sectionName
+					const active = selectedSection === sectionName
 
-										const tabProps = {
-												$position: position,
-												$active: active
-										}
+					const tabProps = {
+						$position: position,
+						$active: active
+					}
 
-										if (!active) tabProps.onClick = () => setSection(sectionName)
+					if (!active) tabProps.onClick = () => setSection(sectionName)
 
-										return (
-												<Tab {...tabProps} key={i}>
-														{active && <TabBorder $position={position}><div /></TabBorder>}
-														<TabHeading>{sectionName}</TabHeading>
-														{active && <TabBorder $position={position}><div /></TabBorder>}
-												</Tab>
-										)
-								})}
-						</TabContainer>
-				</StlNavigation>
-		)
+					return (
+						<Tab {...tabProps} key={i}>
+							{active && <TabBorder $position={position}><div /></TabBorder>}
+							<TabHeading>{sectionName}</TabHeading>
+							{active && <TabBorder $position={position}><div /></TabBorder>}
+						</Tab>
+					)
+				})}
+			</TabContainer>
+		</StlNavigation>
+	)
 }
 
 const StlNavigation = styled.nav`
-		width: 100%;
-		position: relative;
-		border-bottom: ${C.BORDER};
-		${C.IS_DESKTOP} {
-				height: 103px;
-		};
-		${C.IS_MOBILE} {
-				height: 64px;
-				border-width: 1px;
-		};
+	width: 100%;
+	position: relative;
+	border-bottom: ${C.BORDER};
+	${C.IS_DESKTOP} {
+		height: 74px;
+	};
+	${C.IS_MOBILE} {
+		height: 64px;
+		border-width: 1px;
+	};
 `
 
 const TabContainer = styled.div`
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		margin: 0 auto;
-		${C.IS_DESKTOP} {
-				width: 100%;
-				max-width: ${C.MAX_DESKTOP_WIDTH};
-				min-width: ${C.MIN_DESKTOP_WIDTH};
-				padding: 0 5%;
-				height: 103px;
-		};
-		${C.IS_MOBILE} {
-				min-width: ${C.MIN_MOBILE_WIDTH};
-				padding: 0 45px;
-				height: 64px;
-		};
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin: 0 auto;
+	${C.IS_DESKTOP} {
+		width: 100%;
+		max-width: ${C.MAX_DESKTOP_WIDTH};
+		min-width: ${C.MIN_DESKTOP_WIDTH};
+		padding: 0 5%;
+		height: 74px;
+	};
+	${C.IS_MOBILE} {
+		min-width: ${C.MIN_MOBILE_WIDTH};
+		padding: 0 45px;
+		height: 64px;
+	};
 `
 
 const Tab = styled.div`
-		height: 100%;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-		position: relative;
-		${C.IS_MOBILE} {
-				h3 {
-					 margin: 0;
-				};
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	${C.IS_MOBILE} {
+		h3 {
+			margin: 0;
 		};
-		border: ${C.BORDER};
-		${({ $active, $position }) => {
-				let styles = $active ? `
-						cursor: default;
-						background: white;
-				` : `
-						cursor: pointer;
-						border-color: transparent;
-				`
+	};
+	border: ${C.BORDER};
+	${({ $active, $position }) => {
+		let styles = $active ? `
+			cursor: default;
+			background: white;
+		` : `
+			cursor: pointer;
+			border-color: transparent;
+		`
 
-				styles += $position === 'center' ? `
-						padding: 0 25px;
-						${C.IS_DESKTOP} {
-								width: calc(${C.CENTRAL_AREA_WIDTH} + 32px);
-								border-radius: 40px 40px 0 0;
-						};
-						${C.IS_MOBILE} {
-								width: fit-content;
-								border-radius: 25px 25px 0 0;
-						};
+		styles += $position === 'center' ? `
+			padding: 0 25px;
+			${C.IS_DESKTOP} {
+				width: 282px;
+				border-radius: 30px 30px 0 0;
+			};
+			${C.IS_MOBILE} {
+				width: fit-content;
+				border-radius: 25px 25px 0 0;
+			};
 				` : `
 						flex: 1;
 						h3 {
@@ -120,7 +120,7 @@ const Tab = styled.div`
 								};
 						};
 						padding: 0 ${$position === 'left' ? '25px 0 0' : '0 0 25px'};
-						border-radius: ${$position === 'left' ? '0 40px 0 0' : '40px 0 0 0'};
+						border-radius: ${$position === 'left' ? '0 30px 0 0' : '30px 0 0 0'};
 						justify-content: ${$position === 'left' ? 'flex-start' : 'flex-end'};
 						border-${$position}: 2px solid transparent;
 						${C.IS_MOBILE} {
@@ -129,12 +129,12 @@ const Tab = styled.div`
 						};
 				`
 
-				styles += `
-						border-bottom: 2px solid transparent; 
+		styles += `
+						border-bottom: 2px solid transparent;
 				`
 
-				return styles
-		}};
+		return styles
+	}};
 		${C.IS_MOBILE} {
 				border-width: 1px;
 		};
@@ -163,13 +163,13 @@ const TabBorder = styled.div`
 				` : `
 						pointer-events: none;
 						${C.IS_DESKTOP} {
-								left: -40px;
+								left: -30px;
 						};
 						${C.IS_MOBILE} {
 								left: -25px;
 						};
 						> div {
-								border-radius: 0 0 40px 0;
+								border-radius: 0 0 30px 0;
 								border-right: ${C.BORDER};
 								border-bottom: ${C.BORDER};
 								${C.IS_MOBILE} {
@@ -195,13 +195,13 @@ const TabBorder = styled.div`
 			` : `
 						pointer-events: none;
 						${C.IS_DESKTOP} {
-								right: -40px;
+								right: -30px;
 						};
 						${C.IS_MOBILE} {
 								right: -25px;
 						};
 						> div {
-								border-radius: 0 0 0 40px;
+								border-radius: 0 0 0 30px;
 								border-left: ${C.BORDER};
 								border-bottom: ${C.BORDER};
 								${C.IS_MOBILE} {
@@ -213,8 +213,8 @@ const TabBorder = styled.div`
 		};
 		${C.IS_DESKTOP} {
 				bottom: -2px;
-				height: 40px;
-				width: 40px;
+				height: 30px;
+				width: 30px;
 		};
 		${C.IS_MOBILE} {
 				bottom: -1px;
@@ -222,7 +222,6 @@ const TabBorder = styled.div`
 				width: 25px;
 		};
 `
-		
 
 const TabHeading = styled.h3`
 		${C.HEADING_STYLES};
