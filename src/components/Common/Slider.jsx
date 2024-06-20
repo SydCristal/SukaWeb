@@ -1,49 +1,49 @@
-import {	useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 import { C } from '../../utils'
 
 const Slider = ({ label, value, onChange }) => {
-		const [currentValue, setCurrentValue] = useState(value)
-		const [handleShift, setHandleShift] = useState(undefined)
-		const [transition, setTransition] = useState(false)
-		const wrapperRef = useRef(null)
+	const [currentValue, setCurrentValue] = useState(value)
+	const [handleShift, setHandleShift] = useState(undefined)
+	const [transition, setTransition] = useState(false)
+	const wrapperRef = useRef(null)
 
-		const adjustHandleShift = value => {
-				const decrement = document.documentElement.clientWidth >= parseInt(C.MIN_DESKTOP_WIDTH) ? 18 : 10
-				setHandleShift((wrapperRef.current.clientWidth - decrement) / 100 * value)
+	const adjustHandleShift = value => {
+		const decrement = document.documentElement.clientWidth >= parseInt(C.MIN_DESKTOP_WIDTH) ? 18 : 10
+		setHandleShift((wrapperRef.current.clientWidth - decrement) / 100 * value)
+	}
+
+	useEffect(() => {
+		if (handleShift !== undefined) setTransition(true)
+		adjustHandleShift(value)
+		setCurrentValue(value)
+		setTimeout(() => setTransition(false), 300)
+	}, [value])
+
+	const sliderProps = {
+		type: 'range',
+		min: 0,
+		max: 100,
+		step: 1,
+		value: currentValue,
+		$transition: transition,
+		onChange: ({ target: { value } }) => {
+			setCurrentValue(value)
+		},
+		onPointerUp: ({ target: { value } }) => {
+			adjustHandleShift(value)
+			onChange(value)
 		}
+	}
 
-		useEffect(() => {
-				if (handleShift !== undefined) setTransition(true)
-				adjustHandleShift(value)
-				setCurrentValue(value)
-				setTimeout(() => setTransition(false), 300)
-		}, [value])
-
-		const sliderProps = {
-				type: 'range',
-				min: 0,
-				max: 100,
-				step: 1,
-				value: currentValue,
-				$transition: transition,
-				onChange: ({ target: { value } }) => {
-						setCurrentValue(value)
-				},
-				onPointerUp: ({ target: { value } }) => {
-						adjustHandleShift(value)
-						onChange(value)
-				}
-		}
-
-		return (
-				<SliderContainer>
-						<SliderLabel>{label}</SliderLabel>
-						<SliderWrapper ref={wrapperRef} $handleShift={handleShift} $transition={transition}>
-								<StlSlider {...sliderProps} />
-						</SliderWrapper>
-				</SliderContainer>
-		)
+	return (
+		<SliderContainer>
+			<SliderLabel>{label}</SliderLabel>
+			<SliderWrapper ref={wrapperRef} $handleShift={handleShift} $transition={transition}>
+				<StlSlider {...sliderProps} />
+			</SliderWrapper>
+		</SliderContainer>
+	)
 }
 
 const SliderContainer = styled.div`
@@ -73,7 +73,7 @@ const SliderLabel = styled.label`
 `
 
 const sliderThumbStyles = css`
-		-webkit-appearance: none; 
+		-webkit-appearance: none;
 		cursor: pointer;
 		border: none;
 		transition: transform 0.3s;
@@ -139,7 +139,7 @@ const StlSlider = styled.input`
 				border-width: 1px;
 				border-radius: 9.5px;
 		};
-		&::-ms-thumb{ 
+		&::-ms-thumb{
 				${sliderThumbStyles};
 				background: ${({ $transition }) => $transition ? 'transparent' : C.COLOR_BLACK};
 		};

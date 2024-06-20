@@ -59,14 +59,14 @@ const StlSwitch = styled.div`
 				width: 38px;
 				height: 65px;
 				> div {
-					transform: translateY(${value ? '' : '-'}12px);
+					transform: translateY(${value ? '-' : ''}12px);
 				};
 			};
 			${C.IS_MOBILE} {
 				width: 25px;
 				height: 43px;
 				> div {
-					transform: translateY(${value ? '' : '-'}9px);
+					transform: translateY(${value ? '-' : ''}9px);
 				};
 			};
 		` : `

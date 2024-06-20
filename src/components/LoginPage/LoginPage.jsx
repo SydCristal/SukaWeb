@@ -15,10 +15,6 @@ const LoginPage = ({ loginError, setLoginError, passwordError, setPasswordError 
 		Emits.connect({ userName, password })
 	}
 
-	const onLogoClick = () => {
-		Emits.connect({ newUser: { userName, password } })
-	}
-
 	const onChangeUserName = name => {
 		setLoginError(null)
 		setUserName(name)
@@ -32,7 +28,7 @@ const LoginPage = ({ loginError, setLoginError, passwordError, setPasswordError 
 	return (
 		<LoginForm>
 			<div>
-				<LoginIcon src={F.getUrl('icons', 'login', false)} alt='login' onClick={onLogoClick} />
+				<LoginIcon src={F.getUrl('icons', 'login', false)} alt='login'/>
 				<LoginTitle src={F.getUrl('icons', 'title', false)} alt='suka-rental' />
 			</div>
 			<div>
