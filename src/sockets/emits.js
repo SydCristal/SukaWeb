@@ -22,6 +22,10 @@ export const Emits = {
   //  socket.emit('updateUser', userData)
   //},
 
+  previewConfiguration: previewData => {
+    socket.emit('previewConfiguration', previewData)
+  },
+
   updateConfiguration: configuration => {
     socket.emit('updateConfiguration', configuration)
   },

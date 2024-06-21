@@ -73,6 +73,7 @@ const App = () => {
 
 		socket.on('connection', onConnection)
 		socket.on('disconnect', onDisconnect)
+		//socket.on('previewConfiguration', onUpdateConfiguration)
 		socket.on('updateConfiguration', onUpdateConfiguration)
 		socket.on('updateGuests', onUpdateGuests)
 		socket.on('error', onError)
@@ -81,6 +82,7 @@ const App = () => {
 			console.log('CLEAN UP SOCKET')
 			socket.off('connection', onConnection)
 			socket.off('disconnect', onDisconnect)
+			//socket.off('previewConfiguration', onUpdateConfiguration)
 			socket.off('updateConfiguration', onUpdateConfiguration)
 			socket.off('updateGuests', onUpdateGuests)
 			socket.off('error', onError)

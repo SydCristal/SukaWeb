@@ -2,11 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 import { C } from '../../utils'
 
-const Slider = ({ label, value, onChange }) => {
+const Slider = ({ label, value, onChange, onSlide }) => {
 	const [currentValue, setCurrentValue] = useState(value)
 	const [handleShift, setHandleShift] = useState(undefined)
 	const [transition, setTransition] = useState(false)
 	const wrapperRef = useRef(null)
+	const [debounce, setDebounce] = useState(null)
 
 	const adjustHandleShift = value => {
 		const decrement = document.documentElement.clientWidth >= parseInt(C.MIN_DESKTOP_WIDTH) ? 18 : 10
@@ -29,6 +30,11 @@ const Slider = ({ label, value, onChange }) => {
 		$transition: transition,
 		onChange: ({ target: { value } }) => {
 			setCurrentValue(value)
+			if (!debounce) {
+				setDebounce(true)
+				setTimeout(() => setDebounce(false), 100)
+				onSlide(value)
+			}
 		},
 		onPointerUp: ({ target: { value } }) => {
 			adjustHandleShift(value)
