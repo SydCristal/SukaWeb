@@ -37,10 +37,8 @@ const StlHeader = styled.header`
 	flex-direction: row;
 	justify-content: space-between;
 	${C.IS_DESKTOP} {
-		max-width: ${C.MAX_DESKTOP_WIDTH};
-		min-width: ${C.MIN_DESKTOP_WIDTH};
-		width: 100%;
-		padding: 64px 5% 61px;
+		width: ${C.MIN_DESKTOP_WIDTH};
+		padding: 64px 32px 61px;
 		height: 180px;
 	};
 	${C.IS_MOBILE} {
@@ -58,9 +56,7 @@ const HeaderSegment = styled.div`
 	${C.IS_DESKTOP} {
 		height: 44px;
 		&:not(:nth-child(2)) {
-			max-width: ${C.MAX_SIDE_WIDTH};
-			min-width: ${C.MIN_SIDE_WIDTH};
-			width: 100%;
+			width: ${C.SIDE_BLOCK_WIDTH};
 		};
 		&:nth-child(2) {
 			min-width: ${C.CENTRAL_AREA_WIDTH};

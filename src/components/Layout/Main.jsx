@@ -29,14 +29,12 @@ const Main = () => {
 const StlMain = styled.main`
 		flex: 1;
 		${C.IS_DESKTOP} {
-				max-width: ${C.MAX_DESKTOP_WIDTH};
-				min-width: ${C.MIN_DESKTOP_WIDTH};
-				padding: 35px ${C.PAGE_PADDING};
-				width: 100%;
+			width: ${C.MIN_DESKTOP_WIDTH};
+				padding: 32px;
 		};
 		${C.IS_MOBILE} {
 				min-width: ${C.MIN_MOBILE_WIDTH};
-				padding: 25px 25px 45px;
+				padding: 13px 25px 45px;
 		};
 `
 

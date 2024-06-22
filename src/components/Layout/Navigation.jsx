@@ -65,10 +65,8 @@ const TabContainer = styled.div`
 	justify-content: center;
 	margin: 0 auto;
 	${C.IS_DESKTOP} {
-		width: 100%;
-		max-width: ${C.MAX_DESKTOP_WIDTH};
-		min-width: ${C.MIN_DESKTOP_WIDTH};
-		padding: 0 5%;
+		width: ${C.MIN_DESKTOP_WIDTH};
+		padding: 0 32px;
 		height: 74px;
 	};
 	${C.IS_MOBILE} {
@@ -103,31 +101,30 @@ const Tab = styled.div`
 		styles += $position === 'center' ? `
 			padding: 0 25px;
 			${C.IS_DESKTOP} {
-				width: 282px;
+				width: 376px;
 				border-radius: 30px 30px 0 0;
 			};
 			${C.IS_MOBILE} {
 				width: fit-content;
 				border-radius: 25px 25px 0 0;
 			};
-				` : `
-						flex: 1;
-						h3 {
-								${C.IS_DESKTOP} {
-										max-width: ${C.MAX_SIDE_WIDTH};
-										min-width: ${C.MIN_SIDE_WIDTH};
-										width: 100%;
-								};
-						};
-						padding: 0 ${$position === 'left' ? '25px 0 0' : '0 0 25px'};
-						border-radius: ${$position === 'left' ? '0 30px 0 0' : '30px 0 0 0'};
-						justify-content: ${$position === 'left' ? 'flex-start' : 'flex-end'};
-						border-${$position}: 2px solid transparent;
-						${C.IS_MOBILE} {
-								border-radius: ${$position === 'left' ? '0 25px 0 0' : '25px 0 0 0'};
-								justify-content: ${$position === 'left' ? 'flex-end' : 'flex-start'};
-						};
-				`
+		` : `
+			flex: 1;
+			h3 {
+				${C.IS_DESKTOP} {
+					width: ${C.SIDE_BLOCK_WIDTH};
+				};
+			};
+			padding: 0 ${$position === 'left' ? '50px 0 0' : '0 0 50px'};
+			border-radius: ${$position === 'left' ? '0 30px 0 0' : '30px 0 0 0'};
+			justify-content: ${$position === 'left' ? 'flex-start' : 'flex-end'};
+			border-${$position}: 2px solid transparent;
+			${C.IS_MOBILE} {
+				padding: 0 ${$position === 'left' ? '25px 0 0' : '0 0 25px'};
+				border-radius: ${$position === 'left' ? '0 25px 0 0' : '25px 0 0 0'};
+				justify-content: ${$position === 'left' ? 'flex-end' : 'flex-start'};
+			};
+		`
 
 		styles += `
 						border-bottom: 2px solid transparent;

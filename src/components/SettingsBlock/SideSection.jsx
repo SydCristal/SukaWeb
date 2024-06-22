@@ -25,9 +25,7 @@ const StlSideSection = styled.section`
 		${C.IS_DESKTOP} {
 				height: 535px;
 				border-radius: 30px;
-				max-width: ${C.MAX_SIDE_WIDTH};
-				min-width: ${C.MIN_SIDE_WIDTH};
-				width: 100%;
+				width: ${C.SIDE_BLOCK_WIDTH};
 				padding: 32px 32px 80px;
 		};
 		${C.IS_MOBILE} {
@@ -78,6 +76,7 @@ const SelectContainer = styled.div`
 								left: 50%;
 								transform: translateX(-50%);
 								max-width: 70px;
+								text-align: center;
 						};
 				};
 		};

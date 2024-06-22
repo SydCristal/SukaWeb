@@ -15,12 +15,10 @@ const App = () => {
 	const [content, setContent] = useState(<div />)
 	const [loginError, setLoginError] = useState(null)
 	const [passwordError, setPasswordError] = useState(null)
-	const [password, setPassword] = useState('')
 
 	useEffect(() => {
 		function onConnection(data) {
 			const { token, configuration, guests, password } = data
-			console.log('SOCKET IS CONNECTED')
 			if (token) localStorage.setItem('auth-token', token)
 			setToken(token)
 			setLoading(false)
@@ -30,7 +28,6 @@ const App = () => {
 		}
 
 		function onDisconnect() {
-			console.log('SOCKET IS DISCONNECTED')
 			setLoading(false)
 			setIsConnected(false)
 		}
@@ -66,14 +63,12 @@ const App = () => {
 		}
 
 		if (token && !isConnected) {
-			console.log('INIT SOCKET')
 			setLoading(true)
 			Emits.connect({ token })
 		}
 
 		socket.on('connection', onConnection)
 		socket.on('disconnect', onDisconnect)
-		//socket.on('previewConfiguration', onUpdateConfiguration)
 		socket.on('updateConfiguration', onUpdateConfiguration)
 		socket.on('updateGuests', onUpdateGuests)
 		socket.on('error', onError)
@@ -82,7 +77,6 @@ const App = () => {
 			console.log('CLEAN UP SOCKET')
 			socket.off('connection', onConnection)
 			socket.off('disconnect', onDisconnect)
-			//socket.off('previewConfiguration', onUpdateConfiguration)
 			socket.off('updateConfiguration', onUpdateConfiguration)
 			socket.off('updateGuests', onUpdateGuests)
 			socket.off('error', onError)
