@@ -11,9 +11,9 @@ const MiddleSection = params => {
 								<SelectContainer>
 										<Select {...selectParams} />
 								</SelectContainer>
-								<Toggle {...toggleParams}>
+								{toggleParams ? <Toggle {...toggleParams}>
 										all
-								</Toggle>
+								</Toggle> : null}
 						</div>
 						<Switch {...switchParams} vertical={true} />
 				</StlMiddleSection>
@@ -41,9 +41,10 @@ const StlMiddleSection = styled.section`
 		${C.IS_DESKTOP} {
 				min-width: ${C.CENTRAL_AREA_WIDTH};
 				margin: 0 32px;
-				padding-top: 36px;
+				padding: 36px 0 78px;
 				flex-direction: column;
 				align-items: center;
+				justify-content: space-between;
 				display: flex;
 				&:first-child {
 						display: none;

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
-import	{ C } from '../../utils'
+import	{ C, F } from '../../utils'
 
 const Select = ({ label, options, value, onChange, disabled }) => {
 		const [increment, setIncrement] = useState(0)
@@ -87,9 +87,9 @@ const Select = ({ label, options, value, onChange, disabled }) => {
 						<StlSelect>
 								<SelectControl $disabled={disabled} onClick={() => onClick(1)} />
 								<SelectInput ref={selectRef}>
-										{options.map(({ _id, name }, i) => (
+										{options.map(({ _id, name, icon }, i) => (
 												<SelectOption key={_id} $selected={_id === value} $index={i}>
-														{name}
+														{icon ? <img src={F.getUrl('icons', icon, false)} alt={icon} /> : name}
 												</SelectOption>
 										))}
 								</SelectInput>
@@ -212,9 +212,17 @@ const SelectOption = styled.div`
 		z-index: ${({ $selected }) => $selected ? 1 : 0};
 		${C.IS_DESKTOP} {
 				font-size: 20px;
+				> img {
+						max-width: 37px;
+						max-height: 37px;
+				};
 		};
 		${C.IS_MOBILE} {
 				font-size: 16px;
+				> img {
+						max-width: 29px;
+						max-height: 29px;
+				};
 		};
 `
 

@@ -63,12 +63,12 @@ const LightBlock = memo(function LightBlock() {
 			value: selectedArea?.mood,
 			onChange: val => onChange(val, 'mood')
 		},
-		sliderParams: {
+		sliderParams: [{
 			label: 'brightness',
 			value: selectedArea?.brightness,
 			onChange: val => onChange(val, 'brightness'),
 			onSlide: val => onSliderChange('brightness', val)
-		}
+		}]
 	}
 
 	const middleSectionParams = {
@@ -101,12 +101,12 @@ const LightBlock = memo(function LightBlock() {
 			value: selectedArea?.audioReactive,
 			onChange: val => onChange(val, 'audioReactive')
 		},
-		sliderParams: {
+		sliderParams: [{
 			label: 'speed',
 			value: selectedArea?.speed,
 			onChange: val => onChange(val, 'speed'),
 			onSlide: val => onSliderChange('speed', val)
-		}
+		}]
 	}
 
 	const settingsPageParams = {

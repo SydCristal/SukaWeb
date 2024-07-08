@@ -7,14 +7,16 @@ import styled from 'styled-components'
 import { C } from './utils'
 
 const App = () => {
-	const [isConnected, setIsConnected] = useState(false)
-	const { loading, setLoading } = useLoadingContext()
-	const [token, setToken] = useState(localStorage.getItem('auth-token'))
-	const { configuration, setConfiguration } = useConfigurationContext()
-	const { setGuests } = useGuestsContext()
-	const [content, setContent] = useState(<div />)
-	const [loginError, setLoginError] = useState(null)
-	const [passwordError, setPasswordError] = useState(null)
+		const [isConnected, setIsConnected] = useState(false)
+		const { loading, setLoading } = useLoadingContext()
+		const [token, setToken] = useState(localStorage.getItem('auth-token'))
+		const { configuration, setConfiguration } = useConfigurationContext()
+		const { setGuests } = useGuestsContext()
+		const [content, setContent] = useState(<div />)
+		const [loginError, setLoginError] = useState(null)
+		const [passwordError, setPasswordError] = useState(null)
+
+		console.log(configuration);
 
 	useEffect(() => {
 		function onConnection(data) {
@@ -35,7 +37,12 @@ const App = () => {
 		function onUpdateConfiguration(updatedConfiguration) {
 			setLoading(false)
 			setConfiguration(updatedConfiguration)
-		}
+			}
+
+			function onEditConfiguration(res) {
+					setLoading(false)
+					console.log(res)
+			}
 
 		function onUpdateGuests(updatedGuests) {
 			setLoading(false)
@@ -69,7 +76,8 @@ const App = () => {
 
 		socket.on('connection', onConnection)
 		socket.on('disconnect', onDisconnect)
-		socket.on('updateConfiguration', onUpdateConfiguration)
+			socket.on('updateConfiguration', onUpdateConfiguration)
+			socket.on('editConfiguration', onEditConfiguration)
 		socket.on('updateGuests', onUpdateGuests)
 		socket.on('error', onError)
 
@@ -77,7 +85,8 @@ const App = () => {
 			console.log('CLEAN UP SOCKET')
 			socket.off('connection', onConnection)
 			socket.off('disconnect', onDisconnect)
-			socket.off('updateConfiguration', onUpdateConfiguration)
+				socket.off('updateConfiguration', onUpdateConfiguration)
+				socket.off('editConfiguration', onEditConfiguration)
 			socket.off('updateGuests', onUpdateGuests)
 			socket.off('error', onError)
 		}

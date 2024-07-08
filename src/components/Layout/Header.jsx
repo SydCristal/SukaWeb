@@ -7,7 +7,7 @@ import { Emits } from '../../sockets'
 const Header = () => {
 	const { configuration } = useConfigurationContext()
 	const { setLoading } = useLoadingContext()
-	const { updateConfiguration, disconnect } = Emits
+		const { updateConfiguration, disconnect } = Emits
 
 	const onTogglePower = () => {
 		setLoading(true)
@@ -23,7 +23,7 @@ const Header = () => {
 				<img src={F.getUrl('icons', 'suka', false)} alt='suka' />
 			</HeaderSegment>
 			<HeaderSegment>
-				<LogOut onClick={disconnect}>
+							<LogOut onClick={disconnect}>
 					<span>LOG OUT</span>
 					<img src={F.getUrl('icons', 'logout', false)} alt='logout' />
 				</LogOut>

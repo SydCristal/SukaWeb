@@ -68,12 +68,22 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 			value: selectedInstalation?.interactive,
 			onChange: val => onChange(val, 'interactive')
 		},
-		sliderParams: {
-			label: 'intensity',
-			value: selectedInstalation?.intensity,
-			onChange: val => onChange(val, 'intensity'),
-			onSlide: val => onSliderChange('intensity', val)
-		}
+		sliderParams: [{
+				label: 'speed',
+				value: selectedInstalation?.speed,
+				onChange: val => onChange(val, 'speed'),
+				onSlide: val => onSliderChange('speed', val)
+		}, {
+				label: 'brightness',
+				value: selectedInstalation?.brightness,
+				onChange: val => onChange(val, 'brightness'),
+				onSlide: val => onSliderChange('brightness', val)
+		}, {
+				label: 'intensity',
+				value: selectedInstalation?.intensity,
+				onChange: val => onChange(val, 'intensity'),
+				onSlide: val => onSliderChange('intensity', val)
+		}]
 	}
 
 	const middleSectionParams = {
@@ -84,10 +94,11 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 			onChange: onSelectInstalation,
 			disabled: allMode
 		},
-		toggleParams: {
-			value: allMode,
-			onClick: () => onChange(!allMode, 'allMode'),
-		},
+			toggleParams: null,
+		//	{
+		//	value: allMode,
+		//	onClick: () => onChange(!allMode, 'allMode'),
+		//},
 		switchParams: {
 			value: selectedInstalation?.active,
 			onChange: val => onChange(val, 'active')
@@ -101,12 +112,12 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 			value: selectedInstalation?.soundDesign,
 			onChange: val => onChange(val, 'soundDesign')
 		},
-		sliderParams: {
-			label: 'volume',
-			value: selectedInstalation?.volume,
-			onChange: val => onChange(val, 'volume'),
-			onSlide: val => onSliderChange('volume', val)
-		}
+		sliderParams: [{
+				label: 'volume',
+				value: selectedInstalation?.volume,
+				onChange: val => onChange(val, 'volume'),
+				onSlide: val => onSliderChange('volume', val)
+		}]
 	}
 
 	const settingsPageParams = {

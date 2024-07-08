@@ -53,23 +53,29 @@ const Slider = ({ label, value, onChange, onSlide }) => {
 }
 
 const SliderContainer = styled.div`
-		margin: auto auto 0;
+		margin: auto;
 		width: 100%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		${C.IS_DESKTOP} {
 				max-width: 332px;
+				&:not(:last-child) {
+						margin-bottom: 15px;
+				};
 		};
 		${C.IS_MOBILE} {
 				max-width: 198px;
+				&:not(:last-child) {
+						margin-bottom: 28px;
+				};
 		};
 `
 
 const SliderLabel = styled.label`
 		${C.IS_DESKTOP} {
 			font-size: 20px;
-			margin-bottom: 28px;
+			margin-bottom: 10px;
 		};
 		${C.IS_MOBILE} {
 				margin-bottom: 10px;

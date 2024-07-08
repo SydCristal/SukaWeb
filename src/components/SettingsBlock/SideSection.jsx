@@ -11,7 +11,7 @@ const SideSection = ({ title, selectParams, switchParams, sliderParams }) => {
 								{switchParams && <div />}
 								{switchParams && <Switch {...switchParams} />}
 						</SelectContainer>
-						<Slider {...sliderParams} />
+						{sliderParams?.length ? sliderParams.map(params => <Slider {...params} key={params.label} />) : null}
 				</StlSideSection>
 		)
 }
@@ -23,16 +23,16 @@ const StlSideSection = styled.section`
 		flex-direction: column;
 		align-items: center;
 		${C.IS_DESKTOP} {
-				height: 535px;
+				height: 572px;
 				border-radius: 30px;
 				width: ${C.SIDE_BLOCK_WIDTH};
-				padding: 32px 32px 80px;
+				padding: 26px 32px;
 		};
 		${C.IS_MOBILE} {
 				padding: 8px 20px 20px;
 				margin-bottom: 13px;
 				max-width: 342px;
-				height: 187px;
+				min-height: 187px;
 				border-width: 1px;
 				border-radius: 15px;
 				&:last-child {
@@ -45,7 +45,7 @@ const StlSideSection = styled.section`
 const Heading = styled.h2`
 		${C.HEADING_STYLES};
 		${C.IS_DESKTOP} {
-				margin-bottom: 55px;
+				margin-bottom: 21px;
 		};
 		${C.IS_MOBILE} {
 				font-size: 22px;
@@ -56,13 +56,16 @@ const Heading = styled.h2`
 
 const SelectContainer = styled.div`
 		${C.IS_DESKTOP} {
-				> *:first-child { margin-bottom: 32px; }
+				height: 155px;
+				margin-bottom: 39px;
+				> *:first-child { margin-bottom: 27px; }
 		};
 		${C.IS_MOBILE} {
 				width: 100%;	
 				display: flex;
 				flex-direction: row;
 				justify-content: center;
+				margin-bottom: 20px;
 				align-items: center;
 				> *:nth-child(2) {
 						flex: 1;

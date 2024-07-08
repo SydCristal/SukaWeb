@@ -6,8 +6,8 @@ import { C, F } from '../../utils'
 import { Emits } from '../../sockets'
 
 const LoginPage = ({ loginError, setLoginError, passwordError, setPasswordError }) => {
-	const [userName, setUserName] = useState('Syd Cristal')
-	const [password, setPassword] = useState('HOBOROBOT666')
+	const [userName, setUserName] = useState('')
+	const [password, setPassword] = useState('')
 	const { setLoading } = useLoadingContext()
 
 	const submit = () => {
