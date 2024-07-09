@@ -12,8 +12,10 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 	const { updateConfiguration, previewConfiguration } = Emits
 	const [selectedInstalationId, setSelectedInstalationId] = useState(localStorage.getItem('selected-instalation-id') || instalations?.[0]?._id)
 	const findSelectedInstalation = () => {
-		if (!selectedInstalationId && !allMode) return null
-		return allMode ? allSettings : instalations.find(({ _id }) => _id === selectedInstalationId)
+			if (!selectedInstalationId && !instalations?.length) return null// && !allMode) return null
+			let selectedInstalation = allMode ? allSettings : instalations.find(({ _id }) => _id === selectedInstalationId)
+			if (!selectedInstalation) selectedInstalation = instalations[0]
+			return selectedInstalation
 	}
 	const selectedInstalation = findSelectedInstalation()
 

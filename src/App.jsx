@@ -119,12 +119,16 @@ const App = () => {
 
 const StlApp = styled.div`
 		min-height: 100vh;
-		min-width: 100vw;
+		width: 100vw;
+		overflow-x: hidden;
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		${C.IS_MOBILE} {
+				min-width: ${C.MIN_MOBILE_WIDTH};
+		};
 `
 
 const AppContainer = styled.div`

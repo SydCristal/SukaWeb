@@ -47,14 +47,15 @@ const Navigation = () => {
 }
 
 const StlNavigation = styled.nav`
-	width: 100%;
 	position: relative;
 	border-bottom: ${C.BORDER};
 	${C.IS_DESKTOP} {
 		height: 74px;
+		width: 100%;
 	};
 	${C.IS_MOBILE} {
 		height: 64px;
+		width: ${C.MIN_MOBILE_WIDTH};
 		border-width: 1px;
 	};
 `

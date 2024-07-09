@@ -12,8 +12,10 @@ const LightBlock = memo(function LightBlock() {
 	const { updateConfiguration, previewConfiguration } = Emits
 	const [selectedAreaId, setSelectedAreaId] = useState(localStorage.getItem('selected-area-id') || areas?.[0]?._id)
 	const findSelectedArea = () => {
-		if (!selectedAreaId && !allMode) return null
-		return allMode ? allSettings : areas.find(({ _id }) => _id === selectedAreaId)
+			if (!selectedAreaId && areas?.length) return null //&& !allMode) return null
+			let selectedArea = allMode ? allSettings : areas.find(({ _id }) => _id === selectedAreaId)
+			if (!selectedArea) selectedArea = areas[0]
+			return selectedArea
 	}
 	const selectedArea = findSelectedArea()
 
