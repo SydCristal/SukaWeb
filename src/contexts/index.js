@@ -2,3 +2,4 @@ export { ConfigurationContext, ConfigurationProvider, useConfigurationContext } 
 export { SectionContext, SectionProvider, useSectionContext } from './SectionContext'
 export { GuestsContext, GuestsProvider, useGuestsContext } from './GuestsContext'
 export { LoadingContext, LoadingProvider, useLoadingContext } from './LoadingContext'
+export { UsersContext, UsersProvider, useUsersContext } from './UsersContext'

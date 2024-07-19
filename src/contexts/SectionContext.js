@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from 'react'
 const SectionContext = createContext(null)
 
 const SectionProvider = ({ children }) => {
-		const [section, setSection] = useState(localStorage.getItem('section') || 'light')
+		const [section, setSection] = useState(localStorage.getItem('section'))
 
 		const value = {
 				section,

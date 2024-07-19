@@ -1,12 +1,14 @@
 import styled from 'styled-components'
 import { C } from '../../utils'
-import { useSectionContext, useGuestsContext } from '../../contexts'
+import { useSectionContext, useGuestsContext, useUsersContext } from '../../contexts'
 import { LightBlock, InstalationsBlock } from '../SettingsBlock'
-import	GuestsBlock from '../GuestsBlock'
+import GuestsBlock from '../GuestsBlock'
+import UsersBlock from '../UsersBlock'
 
 const Main = () => {
 	const { section } = useSectionContext()
-	const	{ guests } = useGuestsContext()
+		const { guests } = useGuestsContext()
+		const { users } = useUsersContext()
 		let content
 		switch (section) {
 				case 'guests':
@@ -15,8 +17,14 @@ const Main = () => {
 				case 'instalations':
 						content = <InstalationsBlock />
 						break
-				default:
+				case 'light':
 						content = <LightBlock />
+						break
+				case 'users':
+						content = users ? <UsersBlock /> : <div />
+						break
+				default:
+						content = <div />
 		}
 
 		return (

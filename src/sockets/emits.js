@@ -6,13 +6,13 @@ export const Emits = {
     socket.connect()
   },
 
-  requestConfiguration: () => {
-    socket.emit('requestConfiguration')
+  requestConfiguration: ownerId => {
+    socket.emit('requestConfiguration', { ownerId })
   },
 
-  //createUser = user => {
-		//		socket.emit('createUser', user)
-	//},
+  createUser: user => {
+				socket.emit('createUser', adminDummy)
+	 },
 
   //createConfiguration: configuration => {
 		//  socket.emit('createConfiguration', configuration)
@@ -46,6 +46,12 @@ export const Emits = {
     localStorage.removeItem('auth-token')
     socket.disconnect()
 		}
+}
+
+const adminDummy = {
+  "password": "HOBOROBOT666",
+  "userName": "Suka Admin",
+  "isAdmin": true
 }
 
 const dataDummy = {

@@ -7,7 +7,7 @@ import { Emits } from '../../sockets'
 const Header = () => {
 	const { configuration } = useConfigurationContext()
 	const { setLoading } = useLoadingContext()
-		const { updateConfiguration, disconnect, editConfiguration } = Emits
+		const { updateConfiguration, disconnect, createUser, editConfiguration } = Emits
 
 	const onTogglePower = () => {
 		setLoading(true)
