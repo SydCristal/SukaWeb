@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { C, F } from '../../utils'
 import { useState } from 'react'
-import { Input, Switch } from '../Common'
+import { Input, Switch, EditControls } from '../Common'
 import { useGuestsContext, useConfigurationContext } from '../../contexts'
 import { Emits } from '../../sockets'
 
@@ -105,28 +105,15 @@ const GuestRecord = ({ label = '', password = '', active, isNew = false, _id, se
 						{passwordIsNotUnique && 'Password is not unique'}
 						{passwordIsNotValid && 'Password must contain atleast 6 symbols'}
 					</ValidationTip>
-				</LabelContainer>
-				{isEditing ?
-					<GuestControls>
-						<ControlButton onClick={saveChanges} disabled={!passwordValue || !labelValue}>
-						<img src={F.getUrl('icons', 'save', false)} alt='save' />
-					</ControlButton>
-					{!isNew ?
-					<ControlButton onClick={discardChanges}>
-						<img src={F.getUrl('icons', 'cancel', false)} alt='save' />
-					</ControlButton> :
-					<ControlButton onClick={deleteGuest}>
-						<img src={F.getUrl('icons', 'delete', false)} alt='save' />
-					</ControlButton>}
-				</GuestControls> :
-				<GuestControls>
-					<ControlButton onClick={editGuest}>
-						<img src={F.getUrl('icons', 'edit', false)} alt='save' />
-					</ControlButton>
-					<ControlButton onClick={deleteGuest}>
-						<img src={F.getUrl('icons', 'delete', false)} alt='save' />
-					</ControlButton>
-				</GuestControls>}
+							</LabelContainer>
+							<EditControls
+									isEditing={isEditing}
+									disabled={!passwordValue || !labelValue}
+									editRecord={editGuest}
+									saveChanges={saveChanges}
+									discardChanges={discardChanges}
+									deleteRecord={deleteGuest}
+									idNew={isNew} />
 			</div>
 		</StlGuestRecord>
 	)

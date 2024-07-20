@@ -2,24 +2,23 @@ import styled from 'styled-components'
 import { C, F } from '../../utils'
 import { useUsersContext } from '../../contexts'
 import { UserRecord } from './'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const UsersBlock = () => {
-	const { users } = useUsersContext()
+		const { users } = useUsersContext()
 		const [newUser, setNewUser] = useState(null)
-		console.log(users);
 
-	const addNewUser = () => setNewUser({ isNew: true })
+		const addNewUser = () => setNewUser({ isNew: true })
 
-	return (
-		<StlUsersBlock>
-			<AddUserButton onClick={addNewUser} disabled={newUser}>
-				<img src={F.getUrl('icons', 'add', false)} alt='add' />
-			</AddUserButton>
-			{newUser && <UserRecord {...newUser} setNewUser={setNewUser} />}
-			{users && users.map((user, index) => <UserRecord key={index} {...user} />)}
-		</StlUsersBlock>
-	)
+		return (
+				<StlUsersBlock>
+						<AddUserButton onClick={addNewUser} disabled={newUser}>
+								<img src={F.getUrl('icons', 'add', false)} alt='add' />
+						</AddUserButton>
+						{newUser && <UserRecord {...newUser} setNewUser={setNewUser} />}
+						{users && users.map((user, index) => <UserRecord key={index} {...user} />)}
+				</StlUsersBlock>
+		)
 }
 
 const StlUsersBlock = styled.div`

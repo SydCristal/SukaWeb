@@ -1,11 +1,12 @@
 import styled, { css } from 'styled-components'
 import { C, F } from '../../utils'
-import { useState } from 'react'
-import { Input, Switch } from '../Common'
-import { useUsersContext, useConfigurationContext } from '../../contexts'
+import { useState, useEffect } from 'react'
+import { Input, Switch, EditControls } from '../Common'
+import { useUsersContext } from '../../contexts'
 import { Emits } from '../../sockets'
+import { UserConfiguration } from './'
 
-const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, setNewUser }) => {
+const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, setNewUser, configuration }) => {
 		const { users } = useUsersContext()
 		const [isEditing, setIsEditing] = useState(isNew)
 		const [userNameValue, setUserNameValue] = useState(userName)
@@ -13,6 +14,12 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, 
 		const [userNameIsNotUnique, setUserNameIsNotUnique] = useState(false)
 		const [userNameIsNotValid, setUserNameIsNotValid] = useState(false)
 		const [passwordIsNotValid, setPasswordIsNotValid] = useState(false)
+		const [userConfiguration, setUserConfiguration] = useState(configuration)
+
+		useEffect(() => {
+				console.log(configuration);
+				setUserConfiguration(configuration)
+		}, [configuration])
 
 		const validate = () => {
 				const userNameIsUnique = !users.find(user => user.userName === userNameValue && user._id !== _id)
@@ -66,7 +73,6 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, 
 
 		const onChangePassword = password => {
 				setPasswordValue(password)
-				setPasswordIsNotUnique(false)
 				setPasswordIsNotValid(false)
 		}
 
@@ -91,7 +97,7 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, 
 												<UserNameInput $highlighted={userNameIsNotUnique} value={userNameValue} onChange={onChangeUserName} placeholder='set user name' /> :
 												<UserUserName $active={active}>{userNameValue}</UserUserName>}
 								</UserNameContainer>
-								{!isNew && <Switch value={active} onChange={onToggleActive} userName={active ? 'active' : 'inactive'} />}
+								{!isNew && <Switch value={active} onChange={onToggleActive} label={active ? 'active' : 'inactive'} />}
 						</div>
 						<div>
 								<UserNameContainer>
@@ -102,28 +108,16 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, 
 												{passwordIsNotValid && 'Password must contain atleast 6 symbols'}
 										</ValidationTip>
 								</UserNameContainer>
-								{isEditing ?
-										<UserControls>
-												<ControlButton onClick={saveChanges} disabled={!passwordValue || !userNameValue}>
-														<img src={F.getUrl('icons', 'save', false)} alt='save' />
-												</ControlButton>
-												{!isNew ?
-														<ControlButton onClick={discardChanges}>
-																<img src={F.getUrl('icons', 'cancel', false)} alt='save' />
-														</ControlButton> :
-														<ControlButton onClick={deleteUser}>
-																<img src={F.getUrl('icons', 'delete', false)} alt='save' />
-														</ControlButton>}
-										</UserControls> :
-										<UserControls>
-												<ControlButton onClick={editUser}>
-														<img src={F.getUrl('icons', 'edit', false)} alt='save' />
-												</ControlButton>
-												<ControlButton onClick={deleteUser}>
-														<img src={F.getUrl('icons', 'delete', false)} alt='save' />
-												</ControlButton>
-										</UserControls>}
+								<EditControls
+										isEditing={isEditing}
+										disabled={!passwordValue || !userNameValue}
+										editRecord={editUser}
+										saveChanges={saveChanges}
+										discardChanges={discardChanges}
+										deleteRecord={deleteUser}
+										isNew={isNew} />
 						</div>
+						<UserConfiguration isDisplayed={isEditing} {...userConfiguration} />
 				</StlUserRecord>
 		)
 }
@@ -157,8 +151,9 @@ const StlUserRecord = styled.div`
 		border-radius: 30px;
 		padding: 21px 36px 21px 15px;
 		width: 614px;
-		height: 219px;
+		min-height: 219px;
 		margin-bottom: 17px;
+		height: fit-content;
 	};
 	${C.IS_MOBILE} {
 		border-width: 1px;
@@ -206,21 +201,25 @@ const StlUserRecord = styled.div`
 				};
 			};
 		};
-		&:last-child {
+		&:nth-child(2) {
 			align-items: flex-end;
+			margin-bottom: 5px;
 			${C.IS_MOBILE} {
 				> div:first-child {
 					flex: 1;
 				};
 			};
 		};
+		&:last-child {
+				flex-direction: column;
+		};
 	};
 `
 
 const UserNameContainer = styled.div`
 	${C.IS_DESKTOP} {
-		width: 360px;
-		height: 74px;
+		width: 400px;
+		min-height: 74px;
 	};
 	${C.IS_MOBILE} {
 		width: 200px;
@@ -263,49 +262,12 @@ const UserNameInput = styled(Input)`
 	};
 `
 
-const ControlButton = styled.button`
-	width: 40px;
-	height: 40px;
-	border-radius: 10px;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: white;
-	${C.INVERT_ON_HOVER};
-	&:first-child {
-		margin-right: 10px;
-	};
-	> img {
-		max-height: 18px;
-		max-width: 22px;
-	};
-	&:disabled {
-		cursor: not-allowed;
-		opacity: 0.5;
-	};
-	${C.IS_MOBILE} {
-		width: 22px;
-		height: 22px;
-		border-width: 1px;
-		padding: 4px;
-		border-radius: 7px;
-		&:first-child {
-			margin-right: 7px;
-		};
-		> img {
-			max-height: 10px;
-			max-width: 12px;
-		};
-	};
-`
-
 const ValidationTip = styled.p`
 	display: block;
 	color: red;
 	margin: 0px;
 	${C.IS_DESKTOP} {
-		height: 16px;
+		min-height: 16px;
 		text-align: center;
 		font-size: 13px;
 		line-height: 16px;
@@ -329,11 +291,6 @@ const ValidationTip = styled.p`
 			margin-top: 5px;
 		};
 	};
-`
-
-const UserControls = styled.div`
-	display: flex;
-	flex-direction: row;
 `
 
 export { UserRecord }

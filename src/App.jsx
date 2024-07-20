@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useConfigurationContext, useGuestsContext, useLoadingContext, useUsersContext, useSectionContext } from './contexts'
 import LoginPage from './components/LoginPage'
 import Layout from './components/Layout'
@@ -13,21 +13,27 @@ const App = () => {
 		const { configuration, setConfiguration } = useConfigurationContext()
 		const { section, setSection } = useSectionContext()
 		const { setGuests } = useGuestsContext()
-		const { setUsers } = useUsersContext()
+		const { users, setUsers } = useUsersContext()
+		const usersRef = useRef(users)
 		const [content, setContent] = useState(<div />)
 		const [loginError, setLoginError] = useState(null)
 		const [passwordError, setPasswordError] = useState(null)
 
 		useEffect(() => {
+				usersRef.current = users
+		}, [users])
+
+		useEffect(() => {
 				function onConnection(data) {
 						const { token, configuration = {}, guests, password, role, users } = data
+						console.log(users);
 
 						if (token) localStorage.setItem('auth-token', token)
 						if (users) {
 								setUsers(users)
 								setSection('users')
 						} else {
-							 if (!section || section === 'users') setSection('light')
+								if (!section || section === 'users') setSection('light')
 						}
 						setToken(token)
 						setLoading(false)
@@ -43,7 +49,17 @@ const App = () => {
 
 				function onRequestConfiguration(requestedConfiguration) {
 						setLoading(false)
-						console.log(requestedConfiguration);
+						if (usersRef.current) {
+								const users = usersRef.current.map(user => {
+										if (user._id === requestedConfiguration.ownerId) {
+												return { ...user, configuration: requestedConfiguration }
+										}
+
+										return user
+								})
+
+								setUsers(users)
+						}
 				}
 
 				function onUpdateConfiguration(updatedConfiguration) {
