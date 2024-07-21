@@ -6,20 +6,14 @@ import { useUsersContext } from '../../contexts'
 import { Emits } from '../../sockets'
 import { UserConfiguration } from './'
 
-const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, setNewUser, configuration }) => {
-		const { users } = useUsersContext()
-		const [isEditing, setIsEditing] = useState(isNew)
+const UserRecord = ({ userName = '', password = '', active, isNew = false, _id }) => {
+		const { users, setUsers, editedUser, setEditedUser, editedRecord, configuration, setConfiguration } = useUsersContext()
 		const [userNameValue, setUserNameValue] = useState(userName)
 		const [passwordValue, setPasswordValue] = useState(password)
 		const [userNameIsNotUnique, setUserNameIsNotUnique] = useState(false)
 		const [userNameIsNotValid, setUserNameIsNotValid] = useState(false)
 		const [passwordIsNotValid, setPasswordIsNotValid] = useState(false)
-		const [userConfiguration, setUserConfiguration] = useState(configuration)
-
-		useEffect(() => {
-				console.log(configuration);
-				setUserConfiguration(configuration)
-		}, [configuration])
+		const isEdited = isNew ? editedUser === 'new' : editedUser === _id
 
 		const validate = () => {
 				const userNameIsUnique = !users.find(user => user.userName === userNameValue && user._id !== _id)
@@ -35,40 +29,39 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, 
 
 		const saveChanges = () => {
 				if (validate()) {
-						let newUsers
-
 						if (!isNew) {
-								newUsers = users.map(user => user._id === _id ? { userName: userNameValue, password: passwordValue, active, _id } : user)
-								setIsEditing(false)
+								const user = users.find(user => user._id === _id)
+								Emits.editUser({ ...user, userName: userNameValue, password: passwordValue, active, configuration })
 						} else {
-								newUsers = [...users, { userName: userNameValue, password: passwordValue, active: true }]
-								setNewUser(null)
+								Emits.createUser({ userName: userNameValue, password: passwordValue, configuration })
 						}
 
-						//Emits.updateUsers(newUsers)
+						setEditedUser(null)
 				}
 		}
 
 		const discardChanges = () => {
 				setUserNameValue(userName)
 				setPasswordValue(password)
-				setIsEditing(false)
+				setEditedUser(false)
 				setUserNameIsNotUnique(false)
 				setPasswordIsNotValid(false)
 		}
 
 		const editUser = () => {
-				setIsEditing(true)
+				setEditedUser(_id || 'new')
 
-				Emits.requestConfiguration(_id)
+				if (_id) Emits.requestConfiguration(_id)
 		}
 
 		const deleteUser = () => {
 				if (!isNew) {
-						//Emits.updateUsers(users.filter(user => user._id !== _id))
+						Emits.deleteUser(_id)
 				} else {
-						setNewUser(null)
+						setUsers(users.filter(({ isNew }) => !isNew))
 				}
+
+				setEditedUser(null)
 		}
 
 		const onChangePassword = password => {
@@ -82,7 +75,23 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, 
 		}
 
 		const onToggleActive = () => {
-				//Emits.updateUsers(users.map(user => user._id === _id ? { ...user, active: !active } : user))
+				if (isEdited) {
+						setUsers(users.map(user => user._id === _id ? { ...user, active: !active } : user))
+				} else {
+						Emits.toggleUser({ _id, active: !active })
+				}
+		}
+
+		let saveDisabled = !passwordValue || !userNameValue || editedRecord || (!configuration?.lightSettings && !configuration?.instalationSettings)
+
+		if (configuration?.lightSettings?.enabled) {
+				const { areas, dynamicPresets, moodPresets } = configuration.lightSettings
+				saveDisabled = saveDisabled || !areas.length || !dynamicPresets.length || !moodPresets.length
+		}
+
+		if (configuration?.instalationSettings?.enabled) {
+				const { instalations, scenePresets, soundDesignPresets } = configuration.instalationSettings
+				saveDisabled = saveDisabled || !instalations.length || !scenePresets.length || !soundDesignPresets.length
 		}
 
 		return (
@@ -93,7 +102,7 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, 
 												{userNameIsNotUnique && 'User name is not unique'}
 												{userNameIsNotValid && 'User name must contain atleast 3 symbols'}
 										</ValidationTip>
-										{isEditing ?
+										{isEdited ?
 												<UserNameInput $highlighted={userNameIsNotUnique} value={userNameValue} onChange={onChangeUserName} placeholder='set user name' /> :
 												<UserUserName $active={active}>{userNameValue}</UserUserName>}
 								</UserNameContainer>
@@ -101,7 +110,7 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, 
 						</div>
 						<div>
 								<UserNameContainer>
-										{isEditing ?
+										{isEdited ?
 												<UserNameInput $highlighted={passwordIsNotValid} value={passwordValue} onChange={onChangePassword} placeholder='set password' /> :
 												<UserUserName $active={active}>{passwordValue}</UserUserName>}
 										<ValidationTip>
@@ -109,15 +118,16 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id, 
 										</ValidationTip>
 								</UserNameContainer>
 								<EditControls
-										isEditing={isEditing}
-										disabled={!passwordValue || !userNameValue}
+										isEdited={isEdited}
+										editDisabled={editedUser}
+										saveDisabled={saveDisabled}
 										editRecord={editUser}
 										saveChanges={saveChanges}
 										discardChanges={discardChanges}
 										deleteRecord={deleteUser}
 										isNew={isNew} />
 						</div>
-						<UserConfiguration isDisplayed={isEditing} {...userConfiguration} />
+						<UserConfiguration isEdited={isEdited} {...configuration} />
 				</StlUserRecord>
 		)
 }

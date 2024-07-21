@@ -107,8 +107,9 @@ const GuestRecord = ({ label = '', password = '', active, isNew = false, _id, se
 					</ValidationTip>
 							</LabelContainer>
 							<EditControls
-									isEditing={isEditing}
-									disabled={!passwordValue || !labelValue}
+									isEdited={isEditing}
+									editDisabled={false}
+									saveDisabled={!passwordValue || !labelValue}
 									editRecord={editGuest}
 									saveChanges={saveChanges}
 									discardChanges={discardChanges}

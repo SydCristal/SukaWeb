@@ -6,7 +6,7 @@ import GuestsBlock from '../GuestsBlock'
 import UsersBlock from '../UsersBlock'
 
 const Main = () => {
-	const { section } = useSectionContext()
+		const { section } = useSectionContext()
 		const { guests } = useGuestsContext()
 		const { users } = useUsersContext()
 		let content

@@ -1,19 +1,26 @@
 import styled from 'styled-components'
 import { useConfigurationContext, useSectionContext, useGuestsContext, useUsersContext } from '../../contexts'
 import { C } from '../../utils'
+import { useState, useEffect } from 'react'
 
 const Navigation = () => {
 		const { configuration } = useConfigurationContext()
-		const { lightSettings, instalationSettings } = configuration
 		const { guests } = useGuestsContext()
 		const { section, setSection } = useSectionContext()
 		const { users } = useUsersContext()
-		const sections = []
-		if (lightSettings) sections.push('light')
-		if (instalationSettings) sections.push('instalations')
-		if (guests) sections.push('guests')
-		if (users) sections.push('users')
+		const [sections, setSections] = useState([])
+		
 		const selectedSection = section || (sections.length && sections[0])
+
+		useEffect(() => {
+				const sections = []
+				const { lightSettings, instalationSettings } = configuration
+				if (lightSettings?.enabled) sections.push('light')
+				if (instalationSettings?.enabled) sections.push('instalations')
+				if (guests) sections.push('guests')
+				if (users) sections.push('users')
+				setSections(sections)
+		}, [configuration, guests, users])
 
 		return (
 				<StlNavigation>

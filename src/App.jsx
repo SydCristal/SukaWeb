@@ -13,7 +13,7 @@ const App = () => {
 		const { configuration, setConfiguration } = useConfigurationContext()
 		const { section, setSection } = useSectionContext()
 		const { setGuests } = useGuestsContext()
-		const { users, setUsers } = useUsersContext()
+		const { users, setUsers, setConfiguration: setUserConfiguration } = useUsersContext()
 		const usersRef = useRef(users)
 		const [content, setContent] = useState(<div />)
 		const [loginError, setLoginError] = useState(null)
@@ -26,14 +26,13 @@ const App = () => {
 		useEffect(() => {
 				function onConnection(data) {
 						const { token, configuration = {}, guests, password, role, users } = data
-						console.log(users);
 
 						if (token) localStorage.setItem('auth-token', token)
 						if (users) {
 								setUsers(users)
 								setSection('users')
 						} else {
-								if (!section || section === 'users') setSection('light')
+								if (!section || section === 'users') setSection(configuration?.lightSettings?.enabled ? 'light' : configuration?.instalationSettings?.enabled ? 'instalations' : 'guests')
 						}
 						setToken(token)
 						setLoading(false)
@@ -49,6 +48,7 @@ const App = () => {
 
 				function onRequestConfiguration(requestedConfiguration) {
 						setLoading(false)
+						setUserConfiguration(requestedConfiguration)
 						if (usersRef.current) {
 								const users = usersRef.current.map(user => {
 										if (user._id === requestedConfiguration.ownerId) {
@@ -84,10 +84,12 @@ const App = () => {
 										case 'USER_NOT_FOUND':
 										case 'USER_IS_INACTIVE':
 												setLoginError(error.message)
+												localStorage.clear()
 												break
 										case 'PASSWORD_IS_INCORRECT':
 										case 'GUEST_IS_INACTIVE':
 												setPasswordError(error.message)
+												localStorage.clear()
 												break
 										default:
 												console.error('ERROR:', error.message)
@@ -95,6 +97,21 @@ const App = () => {
 								}
 						}
 						console.error('ON_ERROR:', error)
+				}
+		
+				function onCreateUser(user) {
+						setUsers([user, ...usersRef?.current?.filter(({ isNew }) => !isNew) || [] ])
+				}
+
+				function onEditUser(user) {
+						setUsers(usersRef?.current.map(u => u._id === user._id ? user : u) || [])
+				}
+
+				function onDeleteUser(_id) {
+						setUsers(usersRef?.current.filter(u => u._id !== _id) || [])
+				}
+				function onToggleUser({ _id, active }) {
+						setUsers(usersRef?.current.map(u => u._id === _id ? { ...u, active } : u) || [])
 				}
 
 				if (token && !isConnected) {
@@ -104,6 +121,10 @@ const App = () => {
 
 				socket.on('connection', onConnection)
 				socket.on('disconnect', onDisconnect)
+				socket.on('createUser', onCreateUser)
+				socket.on('editUser', onEditUser)
+				socket.on('deleteUser', onDeleteUser)
+				socket.on('toggleUser', onToggleUser)
 				socket.on('requestConfiguration', onRequestConfiguration)
 				socket.on('updateConfiguration', onUpdateConfiguration)
 				socket.on('editConfiguration', onEditConfiguration)
@@ -114,6 +135,10 @@ const App = () => {
 						console.log('CLEAN UP SOCKET')
 						socket.off('connection', onConnection)
 						socket.off('disconnect', onDisconnect)
+						socket.off('createUser', onCreateUser)
+						socket.off('editUser', onEditUser)
+						socket.off('deleteUser', onDeleteUser)
+						socket.off('toggleUser', onToggleUser)
 						socket.off('requestConfiguration', onRequestConfiguration)
 						socket.off('updateConfiguration', onUpdateConfiguration)
 						socket.off('editConfiguration', onEditConfiguration)

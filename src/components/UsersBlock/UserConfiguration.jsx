@@ -1,72 +1,53 @@
-import styled, { css } from 'styled-components'
-import { C, F } from '../../utils'
-import { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { C } from '../../utils'
 import { Switch } from '../Common'
 import { useUsersContext } from '../../contexts'
 import { EditableList } from './'
 
-const UserConfiguration = ({ isDisplayed, ownerId, ...configuration }) => {
-		const [lightSettings, setLightSettings] = useState(configuration.lightSettings)
-		const [lightSettingsEnabled, setLightSettingsEnabled] = useState()
-		const [instalationSettings, setInstalationSettings] = useState(configuration.instalationSettings)
-		const [instalationSettingsEnabled, setInstalationSettingsEnabled] = useState()
-		console.log(isDisplayed, lightSettings, instalationSettings, ownerId)
+const UserConfiguration = ({ isEdited, ownerId }) => {
+		const { editedList, configuration, setConfiguration } = useUsersContext()
+		const { lightSettings, instalationSettings } = configuration || { lightSettings: {}, instalationSettings: {} }
+		const lightSettingsEnabled = lightSettings?.enabled !== undefined ? lightSettings?.enabled : Boolean(lightSettings)
+		const instalationSettingsEnabled = instalationSettings?.enabled !== undefined ? instalationSettings?.enabled : Boolean(instalationSettings)
 
-		useEffect(() => {
-				if (lightSettings === undefined && configuration.lightSettings) {
-						setLightSettings(configuration.lightSettings)
-						setLightSettingsEnabled(true)
-				}
-
-				if (instalationSettings === undefined && configuration.instalationSettings) {
-						setInstalationSettings(configuration.instalationSettings)
-						setInstalationSettingsEnabled(true)
-				}
-		}, [configuration])
-
-		const setAreas = areas => {
-				setLightSettings({ ...lightSettings || {}, areas })
+		const toggleLightSettingsEnabled = () => {
+				setConfiguration({ ...configuration, lightSettings: { ...lightSettings || {}, enabled: !lightSettingsEnabled }})
 		}
 
-		const setDynamicPresets = dynamicPresets => {
-				setLightSettings({ ...lightSettings || {}, dynamicPresets })
+		const toggleInstalationSettingsEnabled = () => {
+				setConfiguration({ ...configuration, instalationSettings: { ...instalationSettings || {}, enabled: !instalationSettingsEnabled } })
+		}
+		const lightListProps = {
+				userId: ownerId,
+				section: 'lightSettings',
+				className: lightSettingsEnabled ? '' : 'collapsed'
 		}
 
-		const setMoodPresets = moodPresets => {
-				setLightSettings({ ...lightSettings || {}, moodPresets })
-		}
-
-		const setInstalations = instalations => {
-				setInstalationSettings({ ...instalationSettings || {}, instalations })
-		}
-
-		const setScenePresets = scenePresets => {
-				setInstalationSettings({ ...instalationSettings || {}, scenePresets })
-		}
-
-		const setSoundDesignPresets = soundDesignPresets => {
-				setInstalationSettings({ ...instalationSettings || {}, soundDesignPresets })
+		const instalationListProps = {
+				userId: ownerId,
+				section: 'instalationSettings',
+				className: instalationSettingsEnabled ? '' : 'collapsed'
 		}
 
 		return (
-				<StlUserConfiguration className={isDisplayed ? '' : 'collapsed'}>
+				<StlUserConfiguration className={isEdited ? '' : 'collapsed'}>
 						<SectionSettingsBlock>
 								<SectionHeadingRow>
 										<SectionSettingsHeading>light settings</SectionSettingsHeading>
-										<Switch value={lightSettingsEnabled} onChange={() => setLightSettingsEnabled(!lightSettingsEnabled)} label={lightSettingsEnabled ? 'enabled' : 'disabled'} />
+										<Switch disabled={editedList} value={lightSettingsEnabled} onChange={toggleLightSettingsEnabled} label={lightSettingsEnabled ? 'enabled' : 'disabled'} />
 								</SectionHeadingRow>
-								<EditableList className={lightSettingsEnabled ? '' : 'collapsed'} records={lightSettings?.areas || []} heading='areas' setRecords={setAreas} />
-								<EditableList className={lightSettingsEnabled ? '' : 'collapsed'} records={lightSettings?.dynamicPresets || []} heading='dynamic' setRecords={setDynamicPresets} iconIsAssignable={true} />
-								<EditableList className={lightSettingsEnabled ? '' : 'collapsed'} records={lightSettings?.moodPresets || []} heading='mood' setRecords={setMoodPresets} iconIsAssignable={true} />
+								<EditableList {...lightListProps} listName='areas' heading='areas' />
+								<EditableList {...lightListProps} listName='dynamicPresets' heading='dynamic' iconIsAssignable={true} />
+								<EditableList {...lightListProps} listName='moodPresets' heading='mood' iconIsAssignable={true} />
 						</SectionSettingsBlock>
 						<SectionSettingsBlock>
 								<SectionHeadingRow>
 										<SectionSettingsHeading>instalation settings</SectionSettingsHeading>
-										<Switch value={instalationSettingsEnabled} onChange={() => setInstalationSettingsEnabled(!instalationSettingsEnabled)} label={instalationSettingsEnabled ? 'enabled' : 'disabled'} />
+										<Switch disabled={editedList} value={instalationSettingsEnabled} onChange={toggleInstalationSettingsEnabled} label={instalationSettingsEnabled ? 'enabled' : 'disabled'} />
 								</SectionHeadingRow>
-								<EditableList className={instalationSettingsEnabled ? '' : 'collapsed'} records={instalationSettings?.instalations || []} heading='areas' setRecords={setInstalations} />
-								<EditableList className={instalationSettingsEnabled ? '' : 'collapsed'} records={instalationSettings?.scenePresets || []} heading='scene' setRecords={setScenePresets} iconIsAssignable={true} />
-								<EditableList className={instalationSettingsEnabled ? '' : 'collapsed'} records={instalationSettings?.soundDesignPresets || []} heading='sound design' setRecords={setSoundDesignPresets} iconIsAssignable={true} />
+								<EditableList {...instalationListProps} listName='instalations' heading='instalations' />
+								<EditableList {...instalationListProps} listName='scenePresets' heading='scene' iconIsAssignable={true} />
+								<EditableList {...instalationListProps} listName='soundDesignPresets' heading='sound design' iconIsAssignable={true} />
 						</SectionSettingsBlock>
 				</StlUserConfiguration>
 		)
@@ -115,7 +96,7 @@ const SectionHeadingRow = styled.div`
 
 const SectionSettingsHeading = styled.h3`
 		font-size: 30px;
-		font-weight: 400;
+		font-weight: 500;
 		font-family: outfit;
 		padding-left: 23px;
 		margin: 0;

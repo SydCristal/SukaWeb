@@ -2,25 +2,26 @@ import styled, { css } from 'styled-components'
 import { C, F } from '../../utils'
 import { useState, useEffect } from 'react'
 import { EditableRow } from './'
+import { useUsersContext } from '../../contexts'
 
-const EditableList = ({ className, records, setRecords, heading, iconIsAssignable = false }) => {
-		const [newRecord, setNewRecord] = useState(null)
-		const [collapsed, setCollapsed] = useState(false)
-		const [editedRecord, setEditedRecord] = useState(null)
-		const [recordList, setRecordList] = useState(records)
-		console.log(records);
-
-		useEffect(() => {
-				setRecordList(records)
-		}, [records])
+const EditableList = ({ section, listName, className, heading, iconIsAssignable = false }) => {
+		const [collapsed, setCollapsed] = useState(true)
+		const { editedList, setEditedList, editedRecord, setEditedRecord, configuration, setConfiguration } = useUsersContext()
+		const editDisabled = editedRecord || (editedList && editedList !== heading)
+		const records = configuration?.[section]?.[listName] || []
+		const setRecords = records => {
+				setConfiguration({ ...configuration, [section]: { ...configuration[section], [listName]: records } })
+		}
 
 		const onAddRecord = () => {
-				setEditedRecord(null)
-				setNewRecord({ name: '', isNew: true })
+				setEditedRecord('new')
+				setEditedList(heading)
+				if (collapsed) setCollapsed(false)
+				setRecords([{ name: '', isNew: true }, ...records])
 		}
 
 		const validateName = (name, id) => {
-				return !recordList.find(record => {
+				return !records.find(record => {
 						if (!record._id && record.name === id) return false
 						if (record._id	=== id) return false
 
@@ -29,52 +30,54 @@ const EditableList = ({ className, records, setRecords, heading, iconIsAssignabl
 		}
 
 		const saveRecord = ({ isNew, _id: recordId, ...record }) => {
-				if (isNew) {
-						setNewRecord(null)
-						setRecords([record, ...recordList])
-				} else {
-						setRecords(recordList.map(({ _id, name, ...r }) => {
-								if (_id === recordId) return { recordId, ...record }
-								if (!recordId && name === record.name) return { ...record }
-								return { _id, name, ...r }
-						}))
-				}
+				setRecords(records.map(({ _id, name, ...r }) => {
+						if (_id === recordId) return { recordId, ...record }
+						if (isNew && r.isNew) return { ...record }
+						if (!recordId && name === record.name) return { ...record }
+						return { _id, name, ...r }
+				}))
+				setEditedList(null)
 		}
 
 		const deleteRecord = ({ isNew, ...record }) => {
 				if (isNew) {
-						setNewRecord(null)
+						setRecords(records.filter(({ isNew }) => !isNew))
 				} else {
-						setRecords(recordList.filter(({ _id, name }) => {
+						setRecords(records.filter(({ _id, name }) => {
 								if (record.id) {
 										return _id !== record._id
 								} else {
-									return name !== record.name
+										return name !== record.name
 								}
 						}))
 				}
+				setEditedList(null)
 		}
 
-		const editableRowProps = { validateName, saveRecord, deleteRecord, iconIsAssignable }
+		const editRecord = id => {
+				setEditedRecord(id)
+				setEditedList(id ? heading : null)
+		}
+
+		const editableRowProps = { validateName, saveRecord, deleteRecord, iconIsAssignable, editedRecord, editRecord, editDisabled }
 
 		return (
 				<StlEditableList className={className}>
 						<SectionSubHeadingRow>
 								<SectionSettingsSubHeading>{heading}</SectionSettingsSubHeading>
+								{!records.length && <NoRecordsTip>no records</NoRecordsTip>}
 								<ListControls>
-										<AddElementButton disabled={newRecord || collapsed} onClick={onAddRecord}><img src={F.getUrl('icons', 'add', false)} alt='add' /></AddElementButton>
-										<CollapseButton $collapsed={collapsed} onClick={() => setCollapsed(!collapsed)}><img src={F.getUrl('icons', 'collapse', false)} alt='collapse' /></CollapseButton>
+										<AddElementButton disabled={editDisabled} onClick={onAddRecord}><img src={F.getUrl('icons', 'add', false)} alt='add' /></AddElementButton>
+										<CollapseButton disabled={!records.length || (editedList && editedList === heading)} $collapsed={collapsed} onClick={() => setCollapsed(!collapsed)}><img src={F.getUrl('icons', 'collapse', false)} alt='collapse' /></CollapseButton>
 								</ListControls>
 						</SectionSubHeadingRow>
-						<EditableRow className={newRecord && !collapsed ? '' : 'collapsed'} {...newRecord} {...editableRowProps} isEdited={true} editRecord={setNewRecord} />
-						{recordList?.map(record => {
-								const isEdited = editedRecord === record._id || editedRecord === record.name
-								const editRecord = id => {
-										setNewRecord(null)
-										setEditedRecord(id)
-								}
-								return <EditableRow className={collapsed ? 'collapsed' : ''} key={record._id || record.name} {...record} {...editableRowProps} isEdited={isEdited} editRecord={editRecord} />
-						})}
+						{records?.map(record => (
+								<EditableRow
+										className={collapsed ? 'collapsed' : ''}
+										key={record._id || record.name || 'new'}
+										{...record}
+										{...editableRowProps} />)
+						)}
 				</StlEditableList>
 		)
 }
@@ -98,21 +101,26 @@ const SectionSettingsRowStyles = css`
 		};
 `
 
-const SectionSubHeadingRow = styled.div`
-		${SectionSettingsRowStyles};
-		height: 41px;
-`
-
 const SectionSettingsSubHeading = styled.h4`
 		font-size: 27px;
 		font-family: outfit;
 		margin: 0;
 		padding-left: 23px;
+		font-weight: 500;
+		flex: 1;
+		text-align: left;
+`
+
+const NoRecordsTip = styled.span`
+		color: red;
+		margin: 0 10px;
 `
 
 const ListControls = styled.div`
 		display: flex;
 		flex-direction: row;
+		opacity: 0;
+		transition: all 0.3s;
 		> button {
 				width: 31px;
 				height: 31px;
@@ -123,10 +131,23 @@ const ListControls = styled.div`
 				justify-content: center;
 				background: white;
 				${C.INVERT_ON_HOVER};
+				&:disabled {
+						opacity: 0.5;
+				};
 				&:not(:last-child) {
 						margin-right: 5px;
 				};
 		}
+`
+
+const SectionSubHeadingRow = styled.div`
+		${SectionSettingsRowStyles};
+		height: 41px;
+		&:hover {
+				${ListControls} {
+						opacity: 1;
+				};
+		};
 `
 
 const CollapseButton = styled.button`
@@ -139,9 +160,6 @@ const CollapseButton = styled.button`
 `
 
 const AddElementButton = styled.button`
-		&:disabled {
-				opacity: 0.5;
-		};
 		>	img {
 				max-height: 16px;
 				max-width: 16px;

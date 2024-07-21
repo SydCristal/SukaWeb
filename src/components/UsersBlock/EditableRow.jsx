@@ -1,13 +1,13 @@
 import styled, { css } from 'styled-components'
-import { EditControls } from '../Common'
+import { EditControls, Input, Select } from '../Common'
 import { useState } from 'react'
-import { Input } from '../Common/Input'
-import { C } from '../../utils'
+import { C, F } from '../../utils'
 
-const EditableRow = ({ className, name = '', _id, isNew = false, icon, validateName, saveRecord, deleteRecord, iconIsAssignable = false, isEdited, editRecord }) => {
+const EditableRow = ({ editDisabled, className, name = '', _id, isNew = false, icon, validateName, saveRecord, deleteRecord, iconIsAssignable = false, editedRecord, editRecord }) => {
 		const [nameValue, setNameValue] = useState(name)
 		const [nameIsNotUnique, setNameIsNotUnique] = useState(false)
-		const [iconValue, setIconValue] = useState(icon)
+		const [iconValue, setIconValue] = useState(icon || C.ICON_OPTIONS[0]._id)
+		const isEdited = editedRecord === (isNew ? 'new' : (_id || name))
 
 		const saveChanges = () => {
 				const nameIsValid = nameValue.length >= 3
@@ -44,9 +44,13 @@ const EditableRow = ({ className, name = '', _id, isNew = false, icon, validateN
 		return (
 				<StlEditableRow className={className}>
 						{isEdited ? <StlInput value={nameValue} onChange={setNameValue} $highlighted={nameIsNotUnique} /> : <NameContainer>{name}</NameContainer>}
+						{iconIsAssignable && isEdited && <IconSelect value={iconValue} onChange={setIconValue} options={C.ICON_OPTIONS} />}
+						{icon && !isEdited && < Icon src={F.getUrl('icons', icon, false)} alt={icon} />}
 						<StlEditControls
-								isEditing={isEdited}
-								disabled={nameValue.trim().length < 3}
+								hidden={editedRecord && !isEdited}
+								isEdited={isEdited}
+								editDisabled={editedRecord || editDisabled}
+								saveDisabled={nameValue.trim().length < 3}
 								editRecord={() => editRecord(_id || name)}
 								saveChanges={saveChanges}
 								discardChanges={discardChanges}
@@ -55,6 +59,22 @@ const EditableRow = ({ className, name = '', _id, isNew = false, icon, validateN
 				</StlEditableRow>
 		)
 }
+
+const IconSelect = styled(Select)`
+		max-height: 100%;
+		margin-right: 10px;
+		width: 170px;
+		img {
+				max-height: 20px;
+				max-width: 20px;
+		};
+`
+
+const Icon = styled.img`
+		height: 20px;
+		width: 20px;
+		margin: 0 85px 0 10px;
+`
 
 const StlEditableRow = styled.div`
 		display: flex;
@@ -75,9 +95,33 @@ const StlEditableRow = styled.div`
 		};
 `
 
+const StlEditControls = styled(EditControls)`
+		opacity: ${({ isEdited }) => isEdited ? '1' : '0'};
+		${StlEditableRow}:hover & {
+				opacity: ${({ hidden }) => hidden ? '0' : '1'};
+				> button {
+						${({ hidden }) => hidden && 'cursor: default'};
+				};
+		};
+		transition: all 0.3s;
+		> button {
+				width: 31px;
+				height: 31px;
+				&:first-child {
+						margin-right: 5px;
+				};
+				> img {
+						max-height: 16px;
+						max-width: 16px;
+				};
+		};
+`
+
 const NameContainer = styled.div`
 		font-size: 20px;
 		padding-left: 23px;
+		flex: 1;
+		text-align: left;
 `
 
 const StlInput = styled(Input)`
@@ -105,18 +149,6 @@ const StlInput = styled(Input)`
 	};
 `
 
-const StlEditControls = styled(EditControls)`
-		> button {
-				width: 31px;
-				height: 31px;
-				&:first-child {
-						margin-right: 5px;
-				};
-				> img {
-						max-height: 16px;
-						max-width: 16px;
-				};
-		};
-`
+
 
 export { EditableRow }

@@ -1,11 +1,11 @@
 import { F, C } from '../../utils'
 import styled from 'styled-components'
 
-const EditControls = ({ isEditing, saveChanges, disabled, discardChanges, deleteRecord, editRecord, isNew, className }) => {
-		if (isEditing) {
+const EditControls = ({ isEdited, saveChanges, editDisabled, saveDisabled, discardChanges, deleteRecord, editRecord, isNew, className }) => {
+		if (isEdited) {
 				return (
 						<StlEditControls className={className}>
-								<ControlButton onClick={saveChanges} disabled={disabled}>
+								<ControlButton onClick={saveChanges} disabled={saveDisabled}>
 										<img src={F.getUrl('icons', 'save', false)} alt='save' />
 								</ControlButton>
 								{!isNew ?
@@ -21,10 +21,10 @@ const EditControls = ({ isEditing, saveChanges, disabled, discardChanges, delete
 
 		return (
 				<StlEditControls className={className}>
-						<ControlButton onClick={editRecord}>
+						<ControlButton onClick={editRecord} disabled={editDisabled}>
 								<img src={F.getUrl('icons', 'edit', false)} alt='save' />
 						</ControlButton>
-						<ControlButton onClick={deleteRecord}>
+						<ControlButton onClick={deleteRecord} disabled={editDisabled}>
 								<img src={F.getUrl('icons', 'delete', false)} alt='save' />
 						</ControlButton>
 				</StlEditControls>

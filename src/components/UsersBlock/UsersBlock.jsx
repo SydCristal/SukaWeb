@@ -2,21 +2,37 @@ import styled from 'styled-components'
 import { C, F } from '../../utils'
 import { useUsersContext } from '../../contexts'
 import { UserRecord } from './'
-import { useState, useEffect } from 'react'
 
 const UsersBlock = () => {
-		const { users } = useUsersContext()
-		const [newUser, setNewUser] = useState(null)
+		const { users, setUsers, editedUser, setEditedUser, setConfiguration } = useUsersContext()
 
-		const addNewUser = () => setNewUser({ isNew: true })
+		const addNewUser = () => {
+				setUsers([{ isNew: true }, ...users])
+				setConfiguration({
+						lightSettings: {
+								areas: [],
+								dynamicPresets: [],
+								moodPresets: [],
+								enabled: false
+						},
+						instalationSettings: {
+								instalations: [],
+								scenePresets: [],
+								soundDesignPresets: [],
+								enabled: false
+						}
+				})
+				setEditedUser('new')
+		}
 
 		return (
 				<StlUsersBlock>
-						<AddUserButton onClick={addNewUser} disabled={newUser}>
+						<AddUserButton onClick={addNewUser} disabled={editedUser}>
 								<img src={F.getUrl('icons', 'add', false)} alt='add' />
 						</AddUserButton>
-						{newUser && <UserRecord {...newUser} setNewUser={setNewUser} />}
-						{users && users.map((user, index) => <UserRecord key={index} {...user} />)}
+						{users.map(user => <UserRecord
+								key={user._id || 'new'}
+								{...user} />)}
 				</StlUsersBlock>
 		)
 }
@@ -42,6 +58,8 @@ const AddUserButton = styled.button`
 	border-radius: 30px;
 	background: white;
 	cursor: pointer;
+	opacity: 1;
+	transition: opacity 0.3s;
 	&:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;

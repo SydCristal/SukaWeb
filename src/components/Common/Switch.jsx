@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components'
 import { C } from '../../utils'
 
-const Switch = ({ label, value, onChange, vertical = false }) => {
+const Switch = ({ disabled, label, value, onChange, vertical = false }) => {
 	const onClick = () => onChange(!value)
 
 	return (
-		<SwitchContainer $vertical={vertical || label}>
+			<SwitchContainer $disabled={disabled} $vertical={vertical || label}>
 			{!label && <SwitchLabel $vertical={vertical}><span>OFF/</span>ON</SwitchLabel>}
 			<StlSwitch $vertical={vertical} value={value} onClick={onClick}>
 				<div />
@@ -19,6 +19,9 @@ const SwitchContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	opacity: 1;
+	transition: opacity 0.3s;
+	${({ $disabled }) => $disabled && `opacity: 0.5; pointer-events: none;`};
 	${C.IS_DESKTOP} {
 		flex-direction: ${({ $vertical }) => $vertical ? 'column' : 'row-reverse'};
 	};

@@ -11,16 +11,24 @@ export const Emits = {
   },
 
   createUser: user => {
-				socket.emit('createUser', adminDummy)
-	 },
+				socket.emit('createUser', user)
+  },
 
-  //createConfiguration: configuration => {
-		//  socket.emit('createConfiguration', configuration)
-  //},
+  editUser: user => {
+    socket.emit('editUser', user)
+  },
 
-  //updateUser: userData => {
-  //  socket.emit('updateUser', userData)
-  //},
+  deleteUser: id => {
+    socket.emit('deleteUser', id)
+  },
+
+  createConfiguration: configuration => {
+		  socket.emit('createConfiguration', configuration)
+  },
+
+  toggleUser: userData => {
+    socket.emit('toggleUser', userData)
+  },
 
   previewConfiguration: previewData => {
     socket.emit('previewConfiguration', previewData)

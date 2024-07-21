@@ -62,7 +62,7 @@ const SelectContainer = styled.div`
 		${C.IS_DESKTOP} {
 				margin-bottom: 17px;
 				> div {
-					height: 142px;
+					height: 102px;
 					justify-content: space-between;
 				};
 		};

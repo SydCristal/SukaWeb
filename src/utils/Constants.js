@@ -39,3 +39,10 @@ export const INVERT_ON_HOVER = css`
 
 export const IS_MOBILE = `@media (max-width: calc(${MIN_DESKTOP_WIDTH} - 1px))`
 export const IS_DESKTOP = `@media (min-width: ${MIN_DESKTOP_WIDTH})`
+export const ICON_OPTIONS = [
+		{ _id: null, name: 'no icon' },
+		{ _id: 'preset1', name: 'preset1', icon: 'preset1' },
+		{ _id: 'preset2', name: 'preset2', icon: 'preset2' },
+		{ _id: 'preset3', name: 'preset3', icon: 'preset3' },
+		{ _id: 'preset4', name: 'preset4', icon: 'preset4' }
+]
