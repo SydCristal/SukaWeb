@@ -46,6 +46,10 @@ export const Emits = {
   //  socket.emit('requestGuests')
   //},
 
+  toggleGuest: guest => {
+    socket.emit('toggleGuest', guest)
+  },
+
   updateGuests: guests => {
     socket.emit('updateGuests', guests)
   },

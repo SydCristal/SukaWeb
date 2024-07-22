@@ -41,7 +41,7 @@ const StlMiddleSection = styled.section`
 		${C.IS_DESKTOP} {
 				min-width: ${C.CENTRAL_AREA_WIDTH};
 				margin: 0 32px;
-				padding: 36px 0 78px;
+				padding: 32px 0 78px;
 				flex-direction: column;
 				align-items: center;
 				justify-content: space-between;
@@ -57,12 +57,17 @@ const StlMiddleSection = styled.section`
 
 const SelectContainer = styled.div`
 		${C.IS_MOBILE} {
-				margin-bottom: 5px;
+				margin-bottom: 10px;
+				height: 70px;
+				> div {
+					height: 100%;
+					justify-content: space-between;
+				};
 		};
 		${C.IS_DESKTOP} {
 				margin-bottom: 17px;
 				> div {
-					height: 102px;
+					height: 106px;
 					justify-content: space-between;
 				};
 		};

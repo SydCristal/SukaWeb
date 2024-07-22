@@ -40,7 +40,6 @@ const ControlButton = styled.button`
 	align-items: center;
 	justify-content: center;
 	background: white;
-	${C.INVERT_ON_HOVER};
 	&:first-child {
 		margin-right: 10px;
 	};
@@ -49,8 +48,11 @@ const ControlButton = styled.button`
 		max-width: 22px;
 	};
 	&:disabled {
-		cursor: not-allowed;
+		cursor: default;
 		opacity: 0.5;
+	};
+	&:not(:disabled) {
+		${C.INVERT_ON_HOVER};
 	};
 	${C.IS_MOBILE} {
 		width: 22px;

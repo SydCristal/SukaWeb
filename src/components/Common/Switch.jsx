@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { C } from '../../utils'
 
-const Switch = ({ disabled, label, value, onChange, vertical = false }) => {
+const Switch = ({ highlightLabel, disabled, label, value, onChange, vertical = false }) => {
 	const onClick = () => onChange(!value)
 
 	return (
@@ -10,7 +10,7 @@ const Switch = ({ disabled, label, value, onChange, vertical = false }) => {
 			<StlSwitch $vertical={vertical} value={value} onClick={onClick}>
 				<div />
 			</StlSwitch>
-			<SwitchLabel $vertical={vertical} $label={label}>{label || <span>OFF</span>}</SwitchLabel>
+					<SwitchLabel $highlightLabel={highlightLabel} $vertical={vertical} $label={label}>{label || <span>OFF</span>}</SwitchLabel>
 		</SwitchContainer>
 	)
 }
@@ -99,6 +99,9 @@ const SwitchLabel = styled.span`
 	height: fit-content;
 	min-width: 47px;
 	text-align: center;
+	${({ $highlightLabel }) => $highlightLabel && css`
+		color: red;
+	`};
 	&:first-child {
 		${C.IS_DESKTOP} {
 			${({ $vertical }) => !$vertical ? `text-align: left` : ''};

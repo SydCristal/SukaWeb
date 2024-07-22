@@ -123,7 +123,8 @@ const SelectLabel = styled.div`
 		};
 		${C.IS_MOBILE} {
 				margin-bottom: 9px;
-				font-size: 14px;
+				font-size: 16px;
+				font-weight: 500;
 				line-height: normal;
 		};
 `

@@ -12,9 +12,10 @@ const App = () => {
 		const [token, setToken] = useState(localStorage.getItem('auth-token'))
 		const { configuration, setConfiguration } = useConfigurationContext()
 		const { section, setSection } = useSectionContext()
-		const { setGuests } = useGuestsContext()
+		const { guests, setGuests, setEditedGuest } = useGuestsContext()
 		const { users, setUsers, setConfiguration: setUserConfiguration } = useUsersContext()
 		const usersRef = useRef(users)
+		const guestsRef = useRef(guests)
 		const [content, setContent] = useState(<div />)
 		const [loginError, setLoginError] = useState(null)
 		const [passwordError, setPasswordError] = useState(null)
@@ -22,6 +23,10 @@ const App = () => {
 		useEffect(() => {
 				usersRef.current = users
 		}, [users])
+
+		useEffect(() => {
+				guestsRef.current = guests
+		}, [guests])
 
 		useEffect(() => {
 				function onConnection(data) {
@@ -75,6 +80,7 @@ const App = () => {
 				function onUpdateGuests(updatedGuests) {
 						setLoading(false)
 						setGuests(updatedGuests)
+						setEditedGuest(null)
 				}
 
 				function onError(error) {
@@ -100,18 +106,27 @@ const App = () => {
 				}
 		
 				function onCreateUser(user) {
+						setLoading(false)
 						setUsers([user, ...usersRef?.current?.filter(({ isNew }) => !isNew) || [] ])
 				}
 
 				function onEditUser(user) {
+						setLoading(false)
 						setUsers(usersRef?.current.map(u => u._id === user._id ? user : u) || [])
 				}
 
 				function onDeleteUser(_id) {
+						setLoading(false)
 						setUsers(usersRef?.current.filter(u => u._id !== _id) || [])
 				}
 				function onToggleUser({ _id, active }) {
+						setLoading(false)
 						setUsers(usersRef?.current.map(u => u._id === _id ? { ...u, active } : u) || [])
+				}
+				function onToggleGuest({ _id, active }) {
+						setLoading(false)
+						setGuests(guestsRef?.current.map(g => g._id === _id ? { ...g, active } : g) || [])
+						setEditedGuest(null)
 				}
 
 				if (token && !isConnected) {
@@ -129,6 +144,7 @@ const App = () => {
 				socket.on('updateConfiguration', onUpdateConfiguration)
 				socket.on('editConfiguration', onEditConfiguration)
 				socket.on('updateGuests', onUpdateGuests)
+				socket.on('toggleGuest', onToggleGuest)
 				socket.on('error', onError)
 
 				return () => {
@@ -139,6 +155,7 @@ const App = () => {
 						socket.off('editUser', onEditUser)
 						socket.off('deleteUser', onDeleteUser)
 						socket.off('toggleUser', onToggleUser)
+						socket.off('toggleGuest', onToggleGuest)
 						socket.off('requestConfiguration', onRequestConfiguration)
 						socket.off('updateConfiguration', onUpdateConfiguration)
 						socket.off('editConfiguration', onEditConfiguration)

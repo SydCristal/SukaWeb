@@ -5,9 +5,8 @@ import { Input, Switch, EditControls } from '../Common'
 import { useGuestsContext, useConfigurationContext } from '../../contexts'
 import { Emits } from '../../sockets'
 
-const GuestRecord = ({ label = '', password = '', active, isNew = false, _id, setNewGuest }) => {
-	const { guests } = useGuestsContext()
-	const [isEditing, setIsEditing] = useState(isNew)
+const GuestRecord = ({ label = '', password = '', active, isNew = false, _id }) => {
+	const { guests, setGuests, editedGuest, setEditedGuest } = useGuestsContext()
 	const [labelValue, setLabelValue] = useState(label)
 	const [passwordValue, setPasswordValue] = useState(password)
 	const [labelIsNotUnique, setLabelIsNotUnique] = useState(false)
@@ -15,9 +14,10 @@ const GuestRecord = ({ label = '', password = '', active, isNew = false, _id, se
 	const [passwordIsNotUnique, setPasswordIsNotUnique] = useState(false)
 	const [passwordIsNotValid, setPasswordIsNotValid] = useState(false)
 	const { configuration: { password: masterPassword } } = useConfigurationContext()
+	const isEdited = isNew ? editedGuest === 'new' : editedGuest === _id
 
 	const validate = () => {
-		const labelIsUnique = !guests.find(guest => guest.label === labelValue && guest._id !== _id)
+			const labelIsUnique = !guests.find(guest => guest.label === labelValue && (isNew ? guest.isNew : (guest._id !== _id)))
 		const labelIsValid = labelValue.length >= 3
 		const passwordIsUnique = passwordValue !== masterPassword && !guests.find(guest => guest.password === passwordValue && guest._id !== _id)
 		const passWordIsValid = passwordValue.length >= 6
@@ -32,38 +32,33 @@ const GuestRecord = ({ label = '', password = '', active, isNew = false, _id, se
 
 	const saveChanges = () => {
 		if (validate()) {
-		  let newGuests
+				let newGuests
 
 			if (!isNew) {
-				newGuests = guests.map(guest => guest._id === _id ? { label: labelValue, password: passwordValue, active, _id } : guest)
-				setIsEditing(false)
+						newGuests = guests.map(guest => guest._id === _id ? { label: labelValue, password: passwordValue, active, _id } : guest)
 			} else {
-				newGuests = [...guests, { label: labelValue, password: passwordValue, active: true }]
-				setNewGuest(null)
-			}
+						newGuests = guests.map(guest => guest.isNew ? { label: labelValue, password: passwordValue, active } : guest)
+				}
 
-			Emits.updateGuests(newGuests)
+				Emits.updateGuests(newGuests)
+				}
 		}
-	}
 
 	const discardChanges = () => {
 		setLabelValue(label)
 		setPasswordValue(password)
-		setIsEditing(false)
+		setEditedGuest(false)
 		setLabelIsNotUnique(false)
 		setPasswordIsNotUnique(false)
 		setPasswordIsNotValid(false)
 	}
 
-	const editGuest = () => {
-		setIsEditing(true)
-	}
-
-	const deleteGuest = () => {
+		const deleteGuest = () => {
 		if (!isNew) {
 			Emits.updateGuests(guests.filter(guest => guest._id !== _id))
 		} else {
-			setNewGuest(null) 
+				setGuests(guests.filter(({ isNew }) => !isNew))
+				setEditedGuest(null)
 		}
 	}
 
@@ -78,8 +73,12 @@ const GuestRecord = ({ label = '', password = '', active, isNew = false, _id, se
 		setLabelIsNotUnique(false)
 	}
 
-	const onToggleActive = () => {
-		Emits.updateGuests(guests.map(guest => guest._id === _id ? { ...guest, active: !active } : guest))
+		const onToggleGuest = () => {
+				if (isEdited) {
+						setGuests(guests.map(g => g._id === _id ? { ...g, active: !active } : g))
+				} else {
+						Emits.toggleGuest({ _id, active: !active })
+				}
 	}
 
 	return (
@@ -90,15 +89,15 @@ const GuestRecord = ({ label = '', password = '', active, isNew = false, _id, se
 						{labelIsNotUnique && 'Label is not unique'}
 						{labelIsNotValid && 'Label must contain atleast 3 symbols'}
 					</ValidationTip>
-					{isEditing ?
+					{isEdited ?
 					<LabelInput $highlighted={labelIsNotUnique} value={labelValue} onChange={onChangeLabel} placeholder='set label' /> :
 					<GuestLabel $active={active}>{labelValue}</GuestLabel>}
-				</LabelContainer>
-				{!isNew && <Switch value={active} onChange={onToggleActive} label={active ? 'active' : 'inactive'} />}
+							</LabelContainer>
+							{!isNew && <Switch disabled={!isEdited && editedGuest} value={active} onChange={onToggleGuest} label={active ? 'active' : 'inactive'} />}
 			</div>
 			<div>
 				<LabelContainer>
-					{isEditing ?
+					{isEdited ?
 					<LabelInput $highlighted={passwordIsNotUnique || passwordIsNotValid} value={passwordValue} onChange={onChangePassword} placeholder='set password' /> :
 						<GuestLabel $active={active}>{passwordValue}</GuestLabel>}
 					<ValidationTip>
@@ -107,14 +106,14 @@ const GuestRecord = ({ label = '', password = '', active, isNew = false, _id, se
 					</ValidationTip>
 							</LabelContainer>
 							<EditControls
-									isEdited={isEditing}
-									editDisabled={false}
+									isEdited={isEdited}
+									editDisabled={editedGuest}
 									saveDisabled={!passwordValue || !labelValue}
-									editRecord={editGuest}
+									editRecord={() => setEditedGuest(_id)}
 									saveChanges={saveChanges}
 									discardChanges={discardChanges}
 									deleteRecord={deleteGuest}
-									idNew={isNew} />
+									isNew={isNew} />
 			</div>
 		</StlGuestRecord>
 	)

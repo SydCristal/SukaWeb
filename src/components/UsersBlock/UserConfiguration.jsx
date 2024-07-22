@@ -4,7 +4,7 @@ import { Switch } from '../Common'
 import { useUsersContext } from '../../contexts'
 import { EditableList } from './'
 
-const UserConfiguration = ({ isEdited, ownerId }) => {
+const UserConfiguration = ({ isEdited, ownerId, highlightDisabled }) => {
 		const { editedList, configuration, setConfiguration } = useUsersContext()
 		const { lightSettings, instalationSettings } = configuration || { lightSettings: {}, instalationSettings: {} }
 		const lightSettingsEnabled = lightSettings?.enabled !== undefined ? lightSettings?.enabled : Boolean(lightSettings)
@@ -29,12 +29,17 @@ const UserConfiguration = ({ isEdited, ownerId }) => {
 				className: instalationSettingsEnabled ? '' : 'collapsed'
 		}
 
+		const switchProps = {
+				disabled: editedList,
+				highlightLabel: highlightDisabled
+		}
+
 		return (
 				<StlUserConfiguration className={isEdited ? '' : 'collapsed'}>
 						<SectionSettingsBlock>
 								<SectionHeadingRow>
 										<SectionSettingsHeading>light settings</SectionSettingsHeading>
-										<Switch disabled={editedList} value={lightSettingsEnabled} onChange={toggleLightSettingsEnabled} label={lightSettingsEnabled ? 'enabled' : 'disabled'} />
+										<Switch {...switchProps} value={lightSettingsEnabled} onChange={toggleLightSettingsEnabled} label={lightSettingsEnabled ? 'enabled' : 'disabled'} />
 								</SectionHeadingRow>
 								<EditableList {...lightListProps} listName='areas' heading='areas' />
 								<EditableList {...lightListProps} listName='dynamicPresets' heading='dynamic' iconIsAssignable={true} />
@@ -43,7 +48,7 @@ const UserConfiguration = ({ isEdited, ownerId }) => {
 						<SectionSettingsBlock>
 								<SectionHeadingRow>
 										<SectionSettingsHeading>instalation settings</SectionSettingsHeading>
-										<Switch disabled={editedList} value={instalationSettingsEnabled} onChange={toggleInstalationSettingsEnabled} label={instalationSettingsEnabled ? 'enabled' : 'disabled'} />
+										<Switch {...switchProps} value={instalationSettingsEnabled} onChange={toggleInstalationSettingsEnabled} label={instalationSettingsEnabled ? 'enabled' : 'disabled'} />
 								</SectionHeadingRow>
 								<EditableList {...instalationListProps} listName='instalations' heading='instalations' />
 								<EditableList {...instalationListProps} listName='scenePresets' heading='scene' iconIsAssignable={true} />
@@ -59,10 +64,6 @@ const StlUserConfiguration = styled.div`
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		${C.IS_DESKTOP} {
-		};
-		${C.IS_MOBILE} {
-		};
 `
 
 const SectionSettingsBlock = styled.div`
@@ -82,9 +83,15 @@ const SectionHeadingRow = styled.div`
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		padding-bottom: 10px;
 		padding-top: 5px;
-		height: 53px;
+		${C.IS_DESKTOP} {
+				padding-bottom: 10px;
+				height: 53px;
+		};
+		${C.IS_MOBILE} {
+				padding-bottom: 5px;
+				height: 35px;
+		};
 		& > :last-child {
 				flex-direction: row-reverse;
 				span {
@@ -95,11 +102,18 @@ const SectionHeadingRow = styled.div`
 `
 
 const SectionSettingsHeading = styled.h3`
-		font-size: 30px;
 		font-weight: 500;
 		font-family: outfit;
-		padding-left: 23px;
 		margin: 0;
+		${C.IS_DESKTOP} {
+				padding-left: 23px;
+				line-height: 38px;
+				font-size: 30px;
+		};
+		${C.IS_MOBILE} {
+				padding-left: 11px;
+				font-size: 23px;
+		};
 `
 
 export {	UserConfiguration }

@@ -11,7 +11,7 @@ const EditableRow = ({ editDisabled, className, name = '', _id, isNew = false, i
 
 		const saveChanges = () => {
 				const nameIsValid = nameValue.length >= 3
-				const nameIsUnique = validateName(nameValue, isNew ? 'new' : _id || name)
+				const nameIsUnique = validateName(nameValue, isNew ? 'new' : (_id || name))
 
 				setNameIsNotUnique(!nameIsUnique)
 
@@ -63,17 +63,34 @@ const EditableRow = ({ editDisabled, className, name = '', _id, isNew = false, i
 const IconSelect = styled(Select)`
 		max-height: 100%;
 		margin-right: 10px;
+		${C.IS_DESKTOP} {
 		width: 170px;
-		img {
-				max-height: 20px;
-				max-width: 20px;
+				img {
+						max-height: 20px;
+						max-width: 20px;
+				};
+		};
+		${C.IS_MOBILE} {
+				width: 130px;
+						img {
+								max-height: 15px;
+								max-width: 15px;
+						};
+				};
 		};
 `
 
 const Icon = styled.img`
-		height: 20px;
-		width: 20px;
-		margin: 0 85px 0 10px;
+		${C.IS_DESKTOP} {
+				max-height: 20px;
+				max-width: 20px;
+				margin: 0 85px 0 10px;
+		};
+		${C.IS_MOBILE} {
+				max-height: 15px;
+				max-width: 15px;
+				margin: 0 67px 0 10px;
+		};
 `
 
 const StlEditableRow = styled.div`
@@ -81,9 +98,6 @@ const StlEditableRow = styled.div`
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		height: 41px;
-		padding-bottom: 10px;
-		font-size: 22px;
 		transition: all 0.3s;
 		overflow: hidden;
 		opacity: 1;
@@ -93,45 +107,69 @@ const StlEditableRow = styled.div`
 				padding: 0;
 				opacity: 0;
 		};
+		${C.IS_DESKTOP} {
+				height: 41px;
+				font-size: 20px;
+				padding-bottom: 10px;
+		};
+		${C.IS_MOBILE} {
+				font-size: 18px;
+				height: 27px;
+				padding-bottom: 5px;
+		};
 `
 
 const StlEditControls = styled(EditControls)`
-		opacity: ${({ isEdited }) => isEdited ? '1' : '0'};
+		${C.IS_DESKTOP} {
+				opacity: ${({ isEdited }) => isEdited ? '1' : '0'};
+		};
 		${StlEditableRow}:hover & {
-				opacity: ${({ hidden }) => hidden ? '0' : '1'};
+				${C.IS_DESKTOP} {
+						opacity: ${({ hidden }) => hidden ? '0' : '1'};
+				};
 				> button {
 						${({ hidden }) => hidden && 'cursor: default'};
 				};
 		};
 		transition: all 0.3s;
 		> button {
-				width: 31px;
-				height: 31px;
 				&:first-child {
 						margin-right: 5px;
 				};
-				> img {
-						max-height: 16px;
-						max-width: 16px;
-				};
+				${C.IS_DESKTOP} {
+						width: 31px;
+						height: 31px;
+						> img {
+								max-height: 16px;
+								max-width: 16px;
+						};
+				}:
+				${C.IS_MOBILE} {
+						width: 22px;
+						height: 22px;
+						> img {
+								max-height: 12px;
+								max-width: 12px;
+						};
+				}:
 		};
 `
 
 const NameContainer = styled.div`
-		font-size: 20px;
-		padding-left: 23px;
 		flex: 1;
 		text-align: left;
+		${C.IS_DESKTOP} {
+				font-size: 20px;
+				padding-left: 23px;
+		};
+		${C.IS_MOBILE} {
+				padding-left: 11px;
+				font-size: 16px;
+		};
 `
 
 const StlInput = styled(Input)`
-	height: 31px;
-	min-height: 31px;
-	font-size: 20px;
 	width: 100%;
-	margin-left: 6px;
-	padding: 0 15px;
-	margin-right: 30px;
 	text-align: left;
 	border-width: 2px;
 	opacity: 1;
@@ -140,12 +178,22 @@ const StlInput = styled(Input)`
 		opacity: 0;	
 	};
 	${({ $highlighted }) => $highlighted && 'border-color: red !important; color: red;'};
+	${C.IS_DESKTOP} {
+	margin-right: 30px;
+		height: 31px;
+		min-height: 31px;
+		font-size: 20px;
+		margin-left: 6px;
+		padding: 0 15px;
+	};
 	${C.IS_MOBILE} {
-		height: 35px;
-		min-height: 35px;
-		font-size: 18px;
-		max-width: 175px;
+	margin-right: 10px;
+		height: 22px;
+		min-height: 22px;
+		font-size: 16px;
 		border-width: 1px;
+		margin-left: 0px;
+		padding: 0 10px;
 	};
 `
 

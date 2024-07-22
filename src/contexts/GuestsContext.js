@@ -4,10 +4,13 @@ const GuestsContext = createContext(null)
 
 const GuestsProvider = ({ children }) => {
 		const [guests, setGuests] = useState(null)
+		const [editedGuest, setEditedGuest] = useState(null)
 
 		const value = {
 				guests,
-				setGuests
+				setGuests,
+				editedGuest,
+				setEditedGuest
 		}
 
 		return (

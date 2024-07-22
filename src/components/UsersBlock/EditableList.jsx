@@ -31,7 +31,7 @@ const EditableList = ({ section, listName, className, heading, iconIsAssignable 
 
 		const saveRecord = ({ isNew, _id: recordId, ...record }) => {
 				setRecords(records.map(({ _id, name, ...r }) => {
-						if (_id === recordId) return { recordId, ...record }
+						if (_id === recordId) return { _id: recordId, ...record }
 						if (isNew && r.isNew) return { ...record }
 						if (!recordId && name === record.name) return { ...record }
 						return { _id, name, ...r }
@@ -102,13 +102,19 @@ const SectionSettingsRowStyles = css`
 `
 
 const SectionSettingsSubHeading = styled.h4`
-		font-size: 27px;
 		font-family: outfit;
 		margin: 0;
-		padding-left: 23px;
 		font-weight: 500;
 		flex: 1;
 		text-align: left;
+		${C.IS_DESKTOP} {
+				font-size: 27px;
+				padding-left: 23px;
+		};
+		${C.IS_MOBILE} {
+				font-size: 22px;
+				padding-left: 11px;
+		};
 `
 
 const NoRecordsTip = styled.span`
@@ -119,20 +125,39 @@ const NoRecordsTip = styled.span`
 const ListControls = styled.div`
 		display: flex;
 		flex-direction: row;
-		opacity: 0;
+		${C.IS_DESKTOP} { opacity: 0; };
 		transition: all 0.3s;
 		> button {
-				width: 31px;
-				height: 31px;
+				${C.IS_DESKTOP} {
+						width: 31px;
+						height: 31px;
+						> img {
+								max-height: 16px;
+								max-width: 16px;
+						};
+				};
+				${C.IS_MOBILE} {
+						width: 22px;
+						height: 22px;
+						border-radius: 7px;
+						border-width: 1px;
+						> img {
+								max-height: 12px;
+								max-width: 12px;
+						};
+				};
 				border-radius: 10px;
 				cursor: pointer;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				background: white;
-				${C.INVERT_ON_HOVER};
 				&:disabled {
 						opacity: 0.5;
+						cursor: default;
+				};
+				&:not(:disabled) {
+						${C.INVERT_ON_HOVER};
 				};
 				&:not(:last-child) {
 						margin-right: 5px;
@@ -142,7 +167,12 @@ const ListControls = styled.div`
 
 const SectionSubHeadingRow = styled.div`
 		${SectionSettingsRowStyles};
-		height: 41px;
+		${C.IS_DESKTOP} {
+				height: 41px;
+		};
+		${C.IS_MOBILE} {
+				height: 37px;
+		};
 		&:hover {
 				${ListControls} {
 						opacity: 1;
@@ -154,16 +184,10 @@ const CollapseButton = styled.button`
 		> img {
 				transform: rotate(${({ $collapsed }) => $collapsed ? '0deg' : '180deg'});
 				transition: transform 0.3s;
-				max-height: 20px;
-				max-width: 20px;
 		};
 `
 
 const AddElementButton = styled.button`
-		>	img {
-				max-height: 16px;
-				max-width: 16px;
-		};
 `
 
 export { EditableList }

@@ -7,7 +7,7 @@ import { Emits } from '../../sockets'
 import { UserConfiguration } from './'
 
 const UserRecord = ({ userName = '', password = '', active, isNew = false, _id }) => {
-		const { users, setUsers, editedUser, setEditedUser, editedRecord, configuration, setConfiguration } = useUsersContext()
+		const { users, setUsers, editedUser, setEditedUser, editedRecord, configuration } = useUsersContext()
 		const [userNameValue, setUserNameValue] = useState(userName)
 		const [passwordValue, setPasswordValue] = useState(password)
 		const [userNameIsNotUnique, setUserNameIsNotUnique] = useState(false)
@@ -82,7 +82,9 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id }
 				}
 		}
 
-		let saveDisabled = !passwordValue || !userNameValue || editedRecord || (!configuration?.lightSettings && !configuration?.instalationSettings)
+		const settingsDisabled = !configuration?.lightSettings?.enabled && !configuration?.instalationSettings?.enabled
+
+		let saveDisabled = !passwordValue || !userNameValue || editedRecord || settingsDisabled
 
 		if (configuration?.lightSettings?.enabled) {
 				const { areas, dynamicPresets, moodPresets } = configuration.lightSettings
@@ -127,7 +129,7 @@ const UserRecord = ({ userName = '', password = '', active, isNew = false, _id }
 										deleteRecord={deleteUser}
 										isNew={isNew} />
 						</div>
-						<UserConfiguration isEdited={isEdited} {...configuration} />
+						<UserConfiguration isEdited={isEdited} highlightDisabled={settingsDisabled} {...configuration} />
 				</StlUserRecord>
 		)
 }
@@ -170,7 +172,7 @@ const StlUserRecord = styled.div`
 		border-radius: 17px;
 		padding: 10px;
 		width: 342px;
-		height: 122px;
+		min-height: 122px;
 		margin-bottom: 15px;
 	};
 	> div {
