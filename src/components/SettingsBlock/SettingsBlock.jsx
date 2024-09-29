@@ -19,6 +19,7 @@ const StlSettingsBlock = styled.div`
 		${C.SETTINGS_BLOCK_STYLES};
 		${({ $active }) => !$active && `
 			opacity: 0.5;
+			transition: opacity 0.3s;
 			pointer-events: none;
 			cursor: not-allowed;
 		`};
