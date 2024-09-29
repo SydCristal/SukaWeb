@@ -34,7 +34,6 @@ const App = () => {
 
 						if (token) localStorage.setItem('auth-token', token)
 						if (users) {
-								setUsers(users)
 								setSection('users')
 						} else {
 								if (!section || section === 'users') setSection(configuration?.lightSettings?.enabled ? 'light' : configuration?.instalationSettings?.enabled ? 'instalations' : 'guests')
@@ -44,6 +43,7 @@ const App = () => {
 						setIsConnected(true)
 						setConfiguration({ password, role, ...configuration })
 						setGuests(guests)
+						setUsers(users)
 				}
 
 				function onDisconnect() {

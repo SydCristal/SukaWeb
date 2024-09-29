@@ -95,6 +95,13 @@ const Tab = styled.div`
 	${C.IS_MOBILE} {
 		h3 {
 			margin: 0;
+			min-width: 63px;
+			:first-child & {
+				padding-left: 2px;
+			};
+			:last-child & {
+				padding-right: 2px;
+			};
 		};
 	};
 	border: ${C.BORDER};
