@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 import { C } from '../../utils'
+import RangeSlider from 'react-range-slider-input'
+import 'react-range-slider-input/dist/style.css'
 
 const Slider = ({ label, value, onChange, onSlide }) => {
 	const [currentValue, setCurrentValue] = useState(value)
@@ -14,7 +16,7 @@ const Slider = ({ label, value, onChange, onSlide }) => {
 		setHandleShift((wrapperRef.current.clientWidth - decrement) / 100 * value)
 	}
 
-	useEffect(() => {
+		useEffect(() => {
 		if (handleShift !== undefined) setTransition(true)
 		adjustHandleShift(value)
 		setCurrentValue(value)
@@ -22,36 +24,32 @@ const Slider = ({ label, value, onChange, onSlide }) => {
 	}, [value])
 
 		const sliderProps = {
-				type: 'range',
+				$transition: transition,
 				min: 0,
 				max: 100,
 				step: 1,
-				value: currentValue,
-				$transition: transition,
-				onChange: ({ target }) => {
-						const { value } = target
+				value: [0, currentValue],
+				onInput: ([_null, value]) => {
 						setCurrentValue(value)
 						if (!debounce) {
-									setDebounce(true)
-									setTimeout(() => setDebounce(false), 100)
-									onSlide(value)
+								setDebounce(true)
+								setTimeout(() => setDebounce(false), 100)
+								onSlide(value)
 						}
 				},
-				onPointerDown: ({ target: { value } }) => {
-						adjustHandleShift(value)
-						setCurrentValue(value)
+				onThumbDragEnd: () => {
+						adjustHandleShift(currentValue)
+						onChange(currentValue)
 				},
-				onPointerUp: ({ target: { value } }) => {
-						adjustHandleShift(value)
-						onChange(value)
-				}
+				thumbsDisabled: [true, false],
+				rangeSlideDisabled: true
 	}
 
 	return (
 		<SliderContainer>
 			<SliderLabel>{label}</SliderLabel>
 			<SliderWrapper ref={wrapperRef} $handleShift={handleShift} $transition={transition}>
-				<StlSlider {...sliderProps} />
+							<StlSlider {...sliderProps} />
 			</SliderWrapper>
 		</SliderContainer>
 	)
@@ -140,11 +138,15 @@ const SliderWrapper = styled.div`
 		};
 `
 
-const StlSlider = styled.input`
+const StlSlider = styled(RangeSlider)`
 		-webkit-appearance: none;
 		border: ${C.BORDER};
 		margin: 0;
 		width: 100%;
+		background: transparent;
+		.range-slider__range {
+				background: transparent;
+		};
 		${C.IS_DESKTOP} {
 				max-width: 332px;
 				height: 40px;
@@ -156,15 +158,11 @@ const StlSlider = styled.input`
 				border-width: 1px;
 				border-radius: 9.5px;
 		};
-		&::-ms-thumb{
-				${sliderThumbStyles};
-				background: ${({ $transition }) => $transition ? 'transparent' : C.COLOR_BLACK};
-		};
-		&::-moz-range-thumb{
-				${sliderThumbStyles};
-				background: ${({ $transition }) => $transition ? 'transparent' : C.COLOR_BLACK};
-		};
-		&::-webkit-slider-thumb {
+		.range-slider__thumb {
+				&[data-lower = true] {
+					width: 0;
+						display: none;
+				};
 				${sliderThumbStyles};
 				background: ${({ $transition }) => $transition ? 'transparent' : C.COLOR_BLACK};
 		};

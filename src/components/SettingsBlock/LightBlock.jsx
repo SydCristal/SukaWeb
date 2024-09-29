@@ -46,7 +46,7 @@ const LightBlock = memo(function LightBlock() {
 		if (allMode) {
 			updatedSettings.allSettings[key] = val
 		} else {
-			updatedSettings.areas = lightSettings.areas.map(area => {
+				updatedSettings.areas.map(area => {
 				if (area._id === selectedAreaId) {
 					area[key] = val
 				}
