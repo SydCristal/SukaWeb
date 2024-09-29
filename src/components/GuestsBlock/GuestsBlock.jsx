@@ -2,21 +2,21 @@ import styled from 'styled-components'
 import { C, F } from '../../utils'
 import { useGuestsContext } from '../../contexts'
 import { GuestRecord } from './'
-import { useState } from 'react'
 
 const GuestsBlock = () => {
-	const { guests } = useGuestsContext()
-	const [newGuest, setNewGuest] = useState(null)
+		const { guests = [], setGuests, editedGuest, setEditedGuest } = useGuestsContext()
 
-	const addNewGuest = () => setNewGuest({ isNew: true })
+		const addNewGuest = () => {
+				setGuests([{ label: '', password: '', active: true, isNew: true }, ...guests])
+				setEditedGuest('new')
+		}
 
 	return (
-		<StlGuestsBlock>
-			<AddGuestButton onClick={addNewGuest} disabled={newGuest}>
+			<StlGuestsBlock>
+					<AddGuestButton onClick={addNewGuest} disabled={editedGuest}>
 				<img src={F.getUrl('icons', 'add', false)} alt='add' />
 			</AddGuestButton>
-			{newGuest && <GuestRecord {...newGuest} setNewGuest={setNewGuest} />}
-			{guests && guests.map((guest, index) => <GuestRecord key={index} {...guest} />)}
+			{guests.map(guest => <GuestRecord key={guest._id || 'new'} {...guest} />)}
 		</StlGuestsBlock>
 	)
 }

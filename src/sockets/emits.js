@@ -6,21 +6,29 @@ export const Emits = {
     socket.connect()
   },
 
-  requestConfiguration: () => {
-    socket.emit('requestConfiguration')
+  requestConfiguration: ownerId => {
+    socket.emit('requestConfiguration', { ownerId })
   },
 
-  //createUser = user => {
-		//		socket.emit('createUser', user)
-	//},
+  createUser: user => {
+				socket.emit('createUser', user)
+  },
 
-  //createConfiguration: configuration => {
-		//  socket.emit('createConfiguration', configuration)
-  //},
+  editUser: user => {
+    socket.emit('editUser', user)
+  },
 
-  //updateUser: userData => {
-  //  socket.emit('updateUser', userData)
-  //},
+  deleteUser: id => {
+    socket.emit('deleteUser', id)
+  },
+
+  createConfiguration: configuration => {
+		  socket.emit('createConfiguration', configuration)
+  },
+
+  toggleUser: userData => {
+    socket.emit('toggleUser', userData)
+  },
 
   previewConfiguration: previewData => {
     socket.emit('previewConfiguration', previewData)
@@ -38,6 +46,10 @@ export const Emits = {
   //  socket.emit('requestGuests')
   //},
 
+  toggleGuest: guest => {
+    socket.emit('toggleGuest', guest)
+  },
+
   updateGuests: guests => {
     socket.emit('updateGuests', guests)
   },
@@ -46,6 +58,12 @@ export const Emits = {
     localStorage.removeItem('auth-token')
     socket.disconnect()
 		}
+}
+
+const adminDummy = {
+  "password": "HOBOROBOT666",
+  "userName": "Suka Admin",
+  "isAdmin": true
 }
 
 const dataDummy = {

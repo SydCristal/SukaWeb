@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 import	{ C, F } from '../../utils'
 
-const Select = ({ label, options, value, onChange, disabled }) => {
+const Select = ({ label, options, value, onChange, disabled, className }) => {
 		const [increment, setIncrement] = useState(0)
 		const selectRef = useRef(null)
 		const selectedOptionRef = useRef(null)
@@ -82,7 +82,7 @@ const Select = ({ label, options, value, onChange, disabled }) => {
 		}
 
 		return (
-				<SelectContainer $disabled={disabled}>
+				<SelectContainer $disabled={disabled} className={className}>
 						{label && <SelectLabel>{label}</SelectLabel>}
 						<StlSelect>
 								<SelectControl $disabled={disabled} onClick={() => onClick(1)} />
@@ -107,9 +107,11 @@ const SelectContainer = styled.div`
 		opacity: ${({ $disabled }) => $disabled ? 0.5 : 1};
 		${C.IS_DESKTOP} {
 				width: fit-content;
+				height: 55px;
 		};
 		${C.IS_MOBILE} {
 				width: 203px;
+				height: 44px;
 		};
 `
 
@@ -121,7 +123,8 @@ const SelectLabel = styled.div`
 		};
 		${C.IS_MOBILE} {
 				margin-bottom: 9px;
-				font-size: 14px;
+				font-size: 16px;
+				font-weight: 500;
 				line-height: normal;
 		};
 `
@@ -131,24 +134,25 @@ const StlSelect = styled.div`
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		height: 100%;
+		max-height: 55px;
 `
 
 const SelectInput = styled.div`
 		overflow: hidden;
+		height: 100%;
 		border: ${C.BORDER};
 		position: relative;
 		${C.IS_DESKTOP} {
 				border-radius: 36px;
 				margin: 0 10px;
 				width: 196px;
-				height: 55px;
 		};
 		${C.IS_MOBILE} {
 				border-radius: 20px;
 				margin: 0 7px;
 				border-width: 1px;
 				width: 153px;
-				height: 44px;
 		};
 `
 

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useConfigurationContext, useGuestsContext, useLoadingContext } from './contexts'
+import { useEffect, useState, useRef } from 'react'
+import { useConfigurationContext, useGuestsContext, useLoadingContext, useUsersContext, useSectionContext } from './contexts'
 import LoginPage from './components/LoginPage'
 import Layout from './components/Layout'
 import socket, { Emits } from './sockets'
@@ -11,110 +11,182 @@ const App = () => {
 		const { loading, setLoading } = useLoadingContext()
 		const [token, setToken] = useState(localStorage.getItem('auth-token'))
 		const { configuration, setConfiguration } = useConfigurationContext()
-		const { setGuests } = useGuestsContext()
+		const { section, setSection } = useSectionContext()
+		const { guests, setGuests, setEditedGuest } = useGuestsContext()
+		const { users, setUsers, setConfiguration: setUserConfiguration } = useUsersContext()
+		const usersRef = useRef(users)
+		const guestsRef = useRef(guests)
 		const [content, setContent] = useState(<div />)
 		const [loginError, setLoginError] = useState(null)
 		const [passwordError, setPasswordError] = useState(null)
 
-		console.log(configuration);
+		useEffect(() => {
+				usersRef.current = users
+		}, [users])
 
-	useEffect(() => {
-		function onConnection(data) {
-			const { token, configuration, guests, password } = data
-			if (token) localStorage.setItem('auth-token', token)
-			setToken(token)
-			setLoading(false)
-			setIsConnected(true)
-			setConfiguration({ password, ...configuration })
-			setGuests(guests)
-		}
+		useEffect(() => {
+				guestsRef.current = guests
+		}, [guests])
 
-		function onDisconnect() {
-			setLoading(false)
-			setIsConnected(false)
-		}
+		useEffect(() => {
+				function onConnection(data) {
+						const { token, configuration = {}, guests, password, role, users } = data
 
-		function onUpdateConfiguration(updatedConfiguration) {
-			setLoading(false)
-			setConfiguration(updatedConfiguration)
-			}
-
-			function onEditConfiguration(res) {
-					setLoading(false)
-					console.log(res)
-			}
-
-		function onUpdateGuests(updatedGuests) {
-			setLoading(false)
-			setGuests(updatedGuests)
-		}
-
-		function onError(error) {
-			setLoading(false)
-			if (error.message) {
-				switch (error.message) {
-					case 'USER_NOT_FOUND':
-					case 'USER_IS_INACTIVE':
-						setLoginError(error.message)
-						break
-					case 'PASSWORD_IS_INCORRECT':
-					case 'GUEST_IS_INACTIVE':
-						setPasswordError(error.message)
-						break
-					default:
-						console.error('ERROR:', error.message)
-						break
+						if (token) localStorage.setItem('auth-token', token)
+						if (users) {
+								setUsers(users)
+								setSection('users')
+						} else {
+								if (!section || section === 'users') setSection(configuration?.lightSettings?.enabled ? 'light' : configuration?.instalationSettings?.enabled ? 'instalations' : 'guests')
+						}
+						setToken(token)
+						setLoading(false)
+						setIsConnected(true)
+						setConfiguration({ password, role, ...configuration })
+						setGuests(guests)
 				}
-			}
-			console.error('ON_ERROR:', error)
+
+				function onDisconnect() {
+						setLoading(false)
+						setIsConnected(false)
+				}
+
+				function onRequestConfiguration(requestedConfiguration) {
+						setLoading(false)
+						setUserConfiguration(requestedConfiguration)
+						if (usersRef.current) {
+								const users = usersRef.current.map(user => {
+										if (user._id === requestedConfiguration.ownerId) {
+												return { ...user, configuration: requestedConfiguration }
+										}
+
+										return user
+								})
+
+								setUsers(users)
+						}
+				}
+
+				function onUpdateConfiguration(updatedConfiguration) {
+						setLoading(false)
+						setConfiguration(updatedConfiguration)
+				}
+
+				function onEditConfiguration(res) {
+						setLoading(false)
+						console.log(res)
+				}
+
+				function onUpdateGuests(updatedGuests) {
+						setLoading(false)
+						setGuests(updatedGuests)
+						setEditedGuest(null)
+				}
+
+				function onError(error) {
+						setLoading(false)
+						if (error.message) {
+								switch (error.message) {
+										case 'USER_NOT_FOUND':
+										case 'USER_IS_INACTIVE':
+												setLoginError(error.message)
+												localStorage.clear()
+												break
+										case 'PASSWORD_IS_INCORRECT':
+										case 'GUEST_IS_INACTIVE':
+												setPasswordError(error.message)
+												localStorage.clear()
+												break
+										default:
+												console.error('ERROR:', error.message)
+												break
+								}
+						}
+						console.error('ON_ERROR:', error)
+				}
+		
+				function onCreateUser(user) {
+						setLoading(false)
+						setUsers([user, ...usersRef?.current?.filter(({ isNew }) => !isNew) || [] ])
+				}
+
+				function onEditUser(user) {
+						setLoading(false)
+						setUsers(usersRef?.current.map(u => u._id === user._id ? user : u) || [])
+				}
+
+				function onDeleteUser(_id) {
+						setLoading(false)
+						setUsers(usersRef?.current.filter(u => u._id !== _id) || [])
+				}
+				function onToggleUser({ _id, active }) {
+						setLoading(false)
+						setUsers(usersRef?.current.map(u => u._id === _id ? { ...u, active } : u) || [])
+				}
+				function onToggleGuest({ _id, active }) {
+						setLoading(false)
+						setGuests(guestsRef?.current.map(g => g._id === _id ? { ...g, active } : g) || [])
+						setEditedGuest(null)
+				}
+
+				if (token && !isConnected) {
+						setLoading(true)
+						Emits.connect({ token })
+				}
+
+				socket.on('connection', onConnection)
+				socket.on('disconnect', onDisconnect)
+				socket.on('createUser', onCreateUser)
+				socket.on('editUser', onEditUser)
+				socket.on('deleteUser', onDeleteUser)
+				socket.on('toggleUser', onToggleUser)
+				socket.on('requestConfiguration', onRequestConfiguration)
+				socket.on('updateConfiguration', onUpdateConfiguration)
+				socket.on('editConfiguration', onEditConfiguration)
+				socket.on('updateGuests', onUpdateGuests)
+				socket.on('toggleGuest', onToggleGuest)
+				socket.on('error', onError)
+
+				return () => {
+						console.log('CLEAN UP SOCKET')
+						socket.off('connection', onConnection)
+						socket.off('disconnect', onDisconnect)
+						socket.off('createUser', onCreateUser)
+						socket.off('editUser', onEditUser)
+						socket.off('deleteUser', onDeleteUser)
+						socket.off('toggleUser', onToggleUser)
+						socket.off('toggleGuest', onToggleGuest)
+						socket.off('requestConfiguration', onRequestConfiguration)
+						socket.off('updateConfiguration', onUpdateConfiguration)
+						socket.off('editConfiguration', onEditConfiguration)
+						socket.off('updateGuests', onUpdateGuests)
+						socket.off('error', onError)
+				}
+		}, [])
+
+		const loginPageCfg = {
+				loginError,
+				setLoginError,
+				passwordError,
+				setPasswordError
 		}
 
-		if (token && !isConnected) {
-			setLoading(true)
-			Emits.connect({ token })
-		}
+		useEffect(() => {
+				const token = localStorage.getItem('auth-token')
+				setToken(token)
+				setContent(!token && !isConnected ? <LoginPage {...loginPageCfg} /> : configuration ? <Layout /> : <div />)
+		}, [isConnected, configuration, loginError, passwordError])
 
-		socket.on('connection', onConnection)
-		socket.on('disconnect', onDisconnect)
-			socket.on('updateConfiguration', onUpdateConfiguration)
-			socket.on('editConfiguration', onEditConfiguration)
-		socket.on('updateGuests', onUpdateGuests)
-		socket.on('error', onError)
-
-		return () => {
-			console.log('CLEAN UP SOCKET')
-			socket.off('connection', onConnection)
-			socket.off('disconnect', onDisconnect)
-				socket.off('updateConfiguration', onUpdateConfiguration)
-				socket.off('editConfiguration', onEditConfiguration)
-			socket.off('updateGuests', onUpdateGuests)
-			socket.off('error', onError)
-		}
-	}, [])
-
-	const loginPageCfg = {
-		loginError,
-		setLoginError,
-		passwordError,
-		setPasswordError
-	}
-
-	useEffect(() => {
-		const token = localStorage.getItem('auth-token')
-		setToken(token)
-		setContent(!token && !isConnected ? <LoginPage {...loginPageCfg} /> : configuration ? <Layout /> : <div />)
-	}, [isConnected, configuration, loginError, passwordError])
-
-	return (
-		<StlApp>
-			<LoaderScreen $loading={loading}>
-				<Loader />
-			</LoaderScreen>
-			<AppContainer $loading={loading}>
-				{content}
-			</AppContainer>
-		</StlApp>
-	)
+		return (
+				<StlApp>
+						<LoaderScreen $loading={loading}>
+								<Loader />
+						</LoaderScreen>
+						<AppContainer $loading={loading}>
+								{content}
+						</AppContainer>
+				</StlApp>
+		)
 }
 
 const StlApp = styled.div`

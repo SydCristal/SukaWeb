@@ -1,49 +1,58 @@
 import styled from 'styled-components'
-import { useConfigurationContext, useSectionContext, useGuestsContext } from '../../contexts'
+import { useConfigurationContext, useSectionContext, useGuestsContext, useUsersContext } from '../../contexts'
 import { C } from '../../utils'
+import { useState, useEffect } from 'react'
 
 const Navigation = () => {
-	const { configuration } = useConfigurationContext()
-	const { lightSettings, instalationSettings } = configuration
-	const { guests } = useGuestsContext()
-	const { section, setSection } = useSectionContext()
-	const sections = []
-	if (lightSettings) sections.push('light')
-	if (instalationSettings) sections.push('instalations')
-	if (guests) sections.push('guests')
-	const selectedSection = section || (sections.length && sections[0])
+		const { configuration } = useConfigurationContext()
+		const { guests } = useGuestsContext()
+		const { section, setSection } = useSectionContext()
+		const { users } = useUsersContext()
+		const [sections, setSections] = useState([])
+		
+		const selectedSection = section || (sections.length && sections[0])
 
-	return (
-		<StlNavigation>
-			<TabContainer>
-				{sections.map((sectionName, i) => {
-					let position = 'center'
+		useEffect(() => {
+				const sections = []
+				const { lightSettings, instalationSettings } = configuration
+				if (lightSettings?.enabled) sections.push('light')
+				if (instalationSettings?.enabled) sections.push('instalations')
+				if (guests) sections.push('guests')
+				if (users) sections.push('users')
+				setSections(sections)
+		}, [configuration, guests, users])
 
-					if (sections.length > 1) {
-						if (i === 0) position = 'left'
-						if (i === sections.length - 1) position = 'right'
-					}
+		return (
+				<StlNavigation>
+						<TabContainer>
+								{sections.map((sectionName, i) => {
+										let position = 'center'
 
-					const active = selectedSection === sectionName
+										if (sections.length > 1) {
+												if (i === 0) position = 'left'
+												if (i === sections.length - 1) position = 'right'
+										}
 
-					const tabProps = {
-						$position: position,
-						$active: active
-					}
+										const active = selectedSection === sectionName
 
-					if (!active) tabProps.onClick = () => setSection(sectionName)
+										const tabProps = {
+												$position: position,
+												$active: active
+										}
 
-					return (
-						<Tab {...tabProps} key={i}>
-							{active && <TabBorder $position={position}><div /></TabBorder>}
-							<TabHeading>{sectionName}</TabHeading>
-							{active && <TabBorder $position={position}><div /></TabBorder>}
-						</Tab>
-					)
-				})}
-			</TabContainer>
-		</StlNavigation>
-	)
+										if (!active) tabProps.onClick = () => setSection(sectionName)
+
+										return (
+												<Tab {...tabProps} key={i}>
+														{active && <TabBorder $position={position}><div /></TabBorder>}
+														<TabHeading>{sectionName}</TabHeading>
+														{active && <TabBorder $position={position}><div /></TabBorder>}
+												</Tab>
+										)
+								})}
+						</TabContainer>
+				</StlNavigation>
+		)
 }
 
 const StlNavigation = styled.nav`
@@ -90,7 +99,7 @@ const Tab = styled.div`
 	};
 	border: ${C.BORDER};
 	${({ $active, $position }) => {
-		let styles = $active ? `
+				let styles = $active ? `
 			cursor: default;
 			background: white;
 		` : `
@@ -98,7 +107,7 @@ const Tab = styled.div`
 			border-color: transparent;
 		`
 
-		styles += $position === 'center' ? `
+				styles += $position === 'center' ? `
 			padding: 0 25px;
 			${C.IS_DESKTOP} {
 				width: 376px;
@@ -126,12 +135,12 @@ const Tab = styled.div`
 			};
 		`
 
-		styles += `
+				styles += `
 						border-bottom: 2px solid transparent;
 				`
 
-		return styles
-	}};
+				return styles
+		}};
 		${C.IS_MOBILE} {
 				border-width: 1px;
 		};

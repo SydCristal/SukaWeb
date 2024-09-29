@@ -1,35 +1,36 @@
 import styled from 'styled-components'
 import { C, F } from '../../utils'
-import { useConfigurationContext, useLoadingContext } from '../../contexts'
+import { useConfigurationContext, useLoadingContext, useUsersContext } from '../../contexts'
 import { Switch } from '../Common'
 import { Emits } from '../../sockets'
 
 const Header = () => {
-	const { configuration } = useConfigurationContext()
-	const { setLoading } = useLoadingContext()
-		const { updateConfiguration, disconnect, editConfiguration } = Emits
+		const { configuration } = useConfigurationContext()
+		const { setLoading } = useLoadingContext()
+		const { users } = useUsersContext()
+		const { updateConfiguration, disconnect } = Emits
 
-	const onTogglePower = () => {
-		setLoading(true)
-		updateConfiguration({ active: !configuration.active })
-	}
+		const onTogglePower = () => {
+				setLoading(true)
+				updateConfiguration({ active: !configuration.active })
+		}
 
-	return (
-		<StlHeader>
-			<HeaderSegment>
-				<Switch value={configuration.active} onChange={onTogglePower} />
-			</HeaderSegment>
-			<HeaderSegment>
-				<img src={F.getUrl('icons', 'suka', false)} alt='suka' />
-			</HeaderSegment>
-			<HeaderSegment>
-							<LogOut onClick={disconnect}>
-					<span>LOG OUT</span>
-					<img src={F.getUrl('icons', 'logout', false)} alt='logout' />
-				</LogOut>
-			</HeaderSegment>
-		</StlHeader>
-	)
+		return (
+				<StlHeader>
+						<HeaderSegment>
+								{!users && <Switch value={configuration.active} onChange={onTogglePower} />}
+						</HeaderSegment>
+						<HeaderSegment>
+								<img src={F.getUrl('icons', 'suka', false)} alt='suka' />
+						</HeaderSegment>
+						<HeaderSegment>
+								<LogOut onClick={disconnect}>
+										<span>LOG OUT</span>
+										<img src={F.getUrl('icons', 'logout', false)} alt='logout' />
+								</LogOut>
+						</HeaderSegment>
+				</StlHeader>
+		)
 }
 
 const StlHeader = styled.header`
