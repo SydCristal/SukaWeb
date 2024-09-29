@@ -21,6 +21,7 @@ export const LABEL_STYLES = css`
 		font-size: 18px;
 `
 export const SETTINGS_BLOCK_STYLES = css`
+			transition: opacity 0.3s;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
