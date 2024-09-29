@@ -21,25 +21,30 @@ const Slider = ({ label, value, onChange, onSlide }) => {
 		setTimeout(() => setTransition(false), 300)
 	}, [value])
 
-	const sliderProps = {
-		type: 'range',
-		min: 0,
-		max: 100,
-		step: 1,
-		value: currentValue,
-		$transition: transition,
-		onChange: ({ target: { value } }) => {
-			setCurrentValue(value)
-			if (!debounce) {
-				setDebounce(true)
-				setTimeout(() => setDebounce(false), 100)
-				onSlide(value)
-			}
-		},
-		onPointerUp: ({ target: { value } }) => {
-			adjustHandleShift(value)
-			onChange(value)
-		}
+		const sliderProps = {
+				type: 'range',
+				min: 0,
+				max: 100,
+				step: 1,
+				value: currentValue,
+				$transition: transition,
+				onChange: ({ target }) => {
+						const { value } = target
+						setCurrentValue(value)
+						if (!debounce) {
+									setDebounce(true)
+									setTimeout(() => setDebounce(false), 100)
+									onSlide(value)
+						}
+				},
+				onPointerDown: ({ target: { value } }) => {
+						adjustHandleShift(value)
+						setCurrentValue(value)
+				},
+				onPointerUp: ({ target: { value } }) => {
+						adjustHandleShift(value)
+						onChange(value)
+				}
 	}
 
 	return (
