@@ -3,12 +3,13 @@ import { C } from '../../utils'
 import { Select, Switch, Timer } from '../Common'
 
 const MiddleSection = params => {
-		console.log(params)
-		const { selectParams, toggleParams, switchParams, section, element } = params
+		const { selectParams, toggleParams, switchParams, sectionTimerParams, elementTimerParams } = params
+
+		console.log(sectionTimerParams)
 
 		return (
 				<StlMiddleSection>
-						<Timer name={section} />
+						<Timer {...sectionTimerParams} />
 						<ElementContainer><div>
 								<SelectContainer>
 										<Select {...selectParams} />
@@ -17,11 +18,11 @@ const MiddleSection = params => {
 										all
 								</Toggle> : null}
 						</div>
-						<Timer name={element?.name} />
+								<Timer {...elementTimerParams} />
 						<div/>
 						<Switch {...switchParams} vertical={true} />
 						</ElementContainer>
-						<Timer name={element?.name} />
+						<Timer {...elementTimerParams} />
 				</StlMiddleSection>
 		)
 }
@@ -55,7 +56,7 @@ const ElementContainer = styled.div`
 								flex: 1;
 						};
 						&:first-child {
-								margin-bottom: 0px;
+								margin-bottom: 10px;
 						};
 				};
 				&:last-child {

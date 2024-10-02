@@ -26,12 +26,14 @@ const LightBlock = memo(function LightBlock() {
 		setSelectedAreaId(id)
 	}
 
-	console.log('selectedArea', selectedArea)
-
 	const onChange = (value, key) => {
 		setLoading(true)
 		const newSettings = {}
-		if (key === 'allMode') {
+			if (key === 'sectionTimer') {
+					newSettings.timer = value
+			} else if (key === 'elementTimer') {
+					newSettings.area = { _id: selectedAreaId, timer: value }
+			} else if (key === 'allMode') {
 			newSettings.allMode = value
 		} else if (allMode) {
 			newSettings.allSettings = { [key]: value }
@@ -91,8 +93,16 @@ const LightBlock = memo(function LightBlock() {
 			value: selectedArea?.active,
 			onChange: val => onChange(val, 'active')
 		},
-		section: 'light',
-		element: selectedArea
+			sectionTimerParams: {
+					name: 'light',
+					onChange: val => onChange(val, 'sectionTimer'),
+					...lightSettings.timer
+			},
+			elementTimerParams: {
+					name: selectedArea?.name,
+					onChange: val => onChange(val, 'elementTimer'),
+					...selectedArea?.timer
+			}
 	}
 
 	const rightSectionParams = {
