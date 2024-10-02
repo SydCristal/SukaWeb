@@ -28,9 +28,13 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 
 	const onChange = (value, key) => {
 		setLoading(true)
-		const newSettings = {}
-		if (key === 'allMode') {
-			newSettings.allMode = value
+			const newSettings = {}
+			if (key === 'sectionTimer') {
+					newSettings.timer = value
+			} else if (key === 'elementTimer') {
+					newSettings.instalation = { _id: selectedInstalationId, timer: value }
+			} else if (key === 'allMode') {
+						newSettings.allMode = value
 		} else if (allMode) {
 			newSettings.allSettings = { [key]: value }
 		} else if (selectedInstalationId) {
@@ -104,7 +108,17 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 		switchParams: {
 			value: selectedInstalation?.active,
 			onChange: val => onChange(val, 'active')
-		}
+			},
+			sectionTimerParams: {
+					name: 'instalations',
+					onChange: val => onChange(val, 'sectionTimer'),
+					...instalationSettings.timer
+			},
+			elementTimerParams: {
+					name: selectedInstalation?.name,
+					onChange: val => onChange(val, 'elementTimer'),
+					...selectedInstalation?.timer
+			}
 	}
 
 	const rightSectionParams = {
