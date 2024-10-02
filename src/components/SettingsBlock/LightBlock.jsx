@@ -26,6 +26,8 @@ const LightBlock = memo(function LightBlock() {
 		setSelectedAreaId(id)
 	}
 
+	console.log('selectedArea', selectedArea)
+
 	const onChange = (value, key) => {
 		setLoading(true)
 		const newSettings = {}
@@ -88,7 +90,9 @@ const LightBlock = memo(function LightBlock() {
 		switchParams: {
 			value: selectedArea?.active,
 			onChange: val => onChange(val, 'active')
-		}
+		},
+		section: 'light',
+		element: selectedArea
 	}
 
 	const rightSectionParams = {

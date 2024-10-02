@@ -1,13 +1,15 @@
 import styled from 'styled-components'
 import { C } from '../../utils'
-import { Select, Switch } from '../Common'
+import { Select, Switch, Timer } from '../Common'
 
 const MiddleSection = params => {
-		const { selectParams, toggleParams, switchParams } = params
+		console.log(params)
+		const { selectParams, toggleParams, switchParams, section, element } = params
 
 		return (
 				<StlMiddleSection>
-						<div>
+						<Timer name={section} />
+						<ElementContainer><div>
 								<SelectContainer>
 										<Select {...selectParams} />
 								</SelectContainer>
@@ -15,42 +17,85 @@ const MiddleSection = params => {
 										all
 								</Toggle> : null}
 						</div>
+						<Timer name={element?.name} />
+						<div/>
 						<Switch {...switchParams} vertical={true} />
+						</ElementContainer>
+						<Timer name={element?.name} />
 				</StlMiddleSection>
 		)
 }
 
-const StlMiddleSection = styled.section`
-	 > div {
+const ElementContainer = styled.div`
+		width: 100%;
+		display: flex;
+		>	div {
 				display: flex;
-				flex-direction: column;
 				align-items: center;
 		};
 		${C.IS_MOBILE} {
+				width: 100%;
+				padding: 15px;
+				flex-direction: row;
+				justify-content: space-between;
+				> div {
+						flex-direction: column;
+						&:nth-child(2) {
+								display: none;
+						};
+				};
+		};
+		${C.IS_DESKTOP} {
+				align-items: center;
+				flex-direction: column;
+				justify-content: space-between;
+				> div {
+						flex-direction: column;
+						&:nth-child(3) {
+								flex: 1;
+						};
+						&:first-child {
+								margin-bottom: 0px;
+						};
+				};
+				&:last-child {
+						height: 100%;
+						display: flex;
+						flex-direction: column;
+				};
+				&:first-child {
+						display: none;
+				};
+		};
+`
+
+const StlMiddleSection = styled.section`
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		${C.IS_MOBILE} {
+				margin: 10px 0 20px;
 				display: none;
 				&:first-child {
-						width: 100%;
-						padding: 15px;
 						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
-						align-items: center;
-						margin-bottom: 35px;
 				};
 		};
 		${C.IS_DESKTOP} {
 				min-width: ${C.CENTRAL_AREA_WIDTH};
 				margin: 0 32px;
-				padding: 32px 0 78px;
-				flex-direction: column;
-				align-items: center;
-				justify-content: space-between;
-				display: flex;
+				> div {
+						&:nth-child(2) {
+								display: flex;
+								flex: 1;
+						};
+				};
 				&:first-child {
 						display: none;
 				};
-				> div:first-child {
-					margin-bottom: 74px;
+				>	:last-child {
+						opacity: 0;
+						pointer-events: none;
+						height: 0;
 				};
 		};
 `

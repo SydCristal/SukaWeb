@@ -104,7 +104,9 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 		switchParams: {
 			value: selectedInstalation?.active,
 			onChange: val => onChange(val, 'active')
-		}
+		},
+		section: 'instalations',
+		element: selectedInstalation
 	}
 
 	const rightSectionParams = {

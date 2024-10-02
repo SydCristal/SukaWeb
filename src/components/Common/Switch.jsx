@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components'
 import { C } from '../../utils'
 
-const Switch = ({ highlightLabel, disabled, label, value, onChange, vertical = false }) => {
+const Switch = ({ highlightLabel, disabled, label, value, onChange, vertical = false, className }) => {
 	const onClick = () => onChange(!value)
 
 	return (
-			<SwitchContainer $disabled={disabled} $vertical={vertical || label}>
+			<SwitchContainer $disabled={disabled} $vertical={vertical || label} className={className}>
 			{!label && <SwitchLabel $vertical={vertical}><span>OFF/</span>ON</SwitchLabel>}
 			<StlSwitch $vertical={vertical} value={value} onClick={onClick}>
 				<div />
