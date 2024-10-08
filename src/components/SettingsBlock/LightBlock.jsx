@@ -32,7 +32,7 @@ const LightBlock = memo(function LightBlock() {
 			if (key === 'sectionTimer') {
 					newSettings.timer = value
 			} else if (key === 'elementTimer') {
-					newSettings.area = { _id: selectedAreaId, timer: value }
+					newSettings.areas = [{ _id: selectedAreaId, timer: value }]
 			} else if (key === 'allMode') {
 			newSettings.allMode = value
 		} else if (allMode) {

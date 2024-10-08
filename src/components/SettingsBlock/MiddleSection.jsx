@@ -5,8 +5,6 @@ import { Select, Switch, Timer } from '../Common'
 const MiddleSection = params => {
 		const { selectParams, toggleParams, switchParams, sectionTimerParams, elementTimerParams } = params
 
-		console.log(sectionTimerParams)
-
 		return (
 				<StlMiddleSection>
 						<Timer {...sectionTimerParams} />

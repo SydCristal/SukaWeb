@@ -32,7 +32,7 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 			if (key === 'sectionTimer') {
 					newSettings.timer = value
 			} else if (key === 'elementTimer') {
-					newSettings.instalation = { _id: selectedInstalationId, timer: value }
+					newSettings.instalations = [{ _id: selectedInstalationId, timer: value }]
 			} else if (key === 'allMode') {
 						newSettings.allMode = value
 		} else if (allMode) {

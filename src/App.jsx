@@ -19,6 +19,7 @@ const App = () => {
 		const [content, setContent] = useState(<div />)
 		const [loginError, setLoginError] = useState(null)
 		const [passwordError, setPasswordError] = useState(null)
+		console.log(configuration);
 
 		useEffect(() => {
 				usersRef.current = users
