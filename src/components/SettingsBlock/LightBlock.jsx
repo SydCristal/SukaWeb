@@ -38,7 +38,7 @@ const LightBlock = memo(function LightBlock() {
 		} else if (allMode) {
 			newSettings.allSettings = { [key]: value }
 		} else if (selectedAreaId) {
-			newSettings.area = { _id: selectedAreaId, [key]: value }
+			newSettings.areas = [{ _id: selectedAreaId, [key]: value }]
 		}
 
 		updateConfiguration({ lightSettings: newSettings })

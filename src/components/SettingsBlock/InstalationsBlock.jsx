@@ -38,7 +38,7 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 		} else if (allMode) {
 			newSettings.allSettings = { [key]: value }
 		} else if (selectedInstalationId) {
-			newSettings.instalation = { _id: selectedInstalationId, [key]: value }
+			newSettings.instalations = [{ _id: selectedInstalationId, [key]: value }]
 		}
 
 		updateConfiguration({ instalationSettings: newSettings })
