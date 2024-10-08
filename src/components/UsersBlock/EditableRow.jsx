@@ -43,7 +43,7 @@ const EditableRow = ({ editDisabled, className, name = '', _id, isNew = false, i
 
 		return (
 				<StlEditableRow className={className}>
-						{isEdited ? <StlInput value={nameValue} onChange={setNameValue} $highlighted={nameIsNotUnique} /> : <NameContainer>{name}</NameContainer>}
+						{isEdited ? <StlInput value={nameValue} onChange={setNameValue} $highlighted={nameIsNotUnique} maxLength='10'/> : <NameContainer>{name}</NameContainer>}
 						{iconIsAssignable && isEdited && <IconSelect value={iconValue} onChange={setIconValue} options={C.ICON_OPTIONS} />}
 						{icon && !isEdited && < Icon src={F.getUrl('icons', icon, false)} alt={icon} />}
 						<StlEditControls
