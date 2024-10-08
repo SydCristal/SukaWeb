@@ -59,7 +59,7 @@ const Timer = params => {//({ name = '', onTimer: active, wakeTime, snoozeTime, 
 										</div>
 								</TimerContainer>
 								<IconSwitch onClick={() => setSnooze(!snooze)} $snooze={snooze}>
-										<img src={F.getUrl('icons', 'preset1', false)} alt='snooze' />
+										<img src={F.getUrl('icons', 'snooze', false)} alt='snooze' />
 										<img src={F.getUrl('icons', 'preset3', false)} alt='wake' />
 								</IconSwitch>
 						</TimerExpanse>
@@ -72,8 +72,9 @@ const StlTimer = styled.div`
 		flex-direction: column;
 		width: 100%;
 		input {
-				border-color: ${C.COLOR_BLACK};
-				border-radius: 8px;
+				border: none;
+				border-left: 1px solid ${C.COLOR_BLACK};
+				border-radius: 0;
 				color: ${C.COLOR_BLACK};
 		};
 		${C.IS_DESKTOP} {
@@ -100,7 +101,7 @@ const IconSwitch = styled.div`
 				&:first-child {
 						${({ $snooze }) => $snooze ? 'opacity: 1;' : 'opacity: 0;touch-events: none'};
 				};
-				&:lastt-child {
+				&:last-child {
 						${({ $snooze }) => !$snooze ? 'opacity: 1;' : 'opacity: 0;touch-events: none'};
 				};
 		};
@@ -109,7 +110,7 @@ const IconSwitch = styled.div`
 const TimerExpanse = styled.div`
 		height: ${({ $active }) => $active ? '75' : '0'}px;
 		pointer-eventa: ${({ $active }) => $active ? 'auto' : 'none'};
-		padding: 0 15px;
+		padding-right: 10px;
 		overflow: hidden;
 		transition: height 0.3s;
 		display: flex;
@@ -126,12 +127,15 @@ const TimerContainer = styled.div`
 		> div {
 				height: 30px;
 				margin-bottom: 10px;
+				border: 1px solid ${C.COLOR_BLACK};
+				border-radius: 8px;
+				padding-left: 10px;
+				padding-right: 5px;
 		};
 		label {
 				display: inline-block;
 				width: 65px;
 				margin-right: 10px;
-				text-align: right;
 		};
 `
 
