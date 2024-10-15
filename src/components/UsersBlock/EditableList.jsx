@@ -31,7 +31,7 @@ const EditableList = ({ section, listName, className, heading, iconIsAssignable 
 
 		const saveRecord = ({ isNew, _id: recordId, ...record }) => {
 				setRecords(records.map(({ _id, name, ...r }) => {
-						if (_id === recordId) return { _id: recordId, ...record }
+						if (recordId && _id === recordId) return { _id: recordId, ...record }
 						if (isNew && r.isNew) return { ...record }
 						if (!recordId && name === record.name) return { ...record }
 						return { _id, name, ...r }
