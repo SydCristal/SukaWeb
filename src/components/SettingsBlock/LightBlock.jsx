@@ -3,6 +3,7 @@ import { useConfigurationContext, useLoadingContext } from '../../contexts'
 import { Emits } from '../../sockets'
 import SettingsBlock from './'
 import _ from 'lodash'
+import { F } from '../../utils'
 
 const LightBlock = memo(function LightBlock() {
 	const { configuration } = useConfigurationContext()
@@ -11,15 +12,13 @@ const LightBlock = memo(function LightBlock() {
 	const { allMode, allSettings, moodPresets, dynamicPresets, areas } = lightSettings
 	const { updateConfiguration, previewConfiguration } = Emits
 	const [selectedAreaId, setSelectedAreaId] = useState(localStorage.getItem('selected-area-id') || areas?.[0]?._id)
-	const findSelectedArea = () => {
-			if (!selectedAreaId && areas?.length) return null //&& !allMode) return null
-			let selectedArea = allMode ? allSettings : areas.find(({ _id }) => _id === selectedAreaId)
-			if (!selectedArea) selectedArea = areas[0]
-			return selectedArea
-	}
-	const selectedArea = findSelectedArea()
+		const selectedArea = F.findSelectedArea({ areas, allMode, allSettings, selectedAreaId })
 
-	if (!selectedAreaId || !selectedArea) return null
+		if (!selectedAreaId || !selectedArea) return null
+
+		const timerIsActive = selectedArea?.timer?.active || lightSettings.timer?.active
+		const snoozeState = selectedArea?.timer?.active ? selectedArea?.timer?.snooze : (lightSettings.timer?.active && lightSettings.timer?.snooze)
+		const timerIcon = timerIsActive ? (snoozeState ? 'snooze' : 'wake') : 'timer'
 
 	const onSelectArea = id => {
 		localStorage.setItem('selected-area-id', id)
@@ -102,7 +101,8 @@ const LightBlock = memo(function LightBlock() {
 					name: selectedArea?.name,
 					onChange: val => onChange(val, 'elementTimer'),
 					...selectedArea?.timer
-			}
+			},
+			timerIcon
 	}
 
 	const rightSectionParams = {
@@ -128,7 +128,7 @@ const LightBlock = memo(function LightBlock() {
 	const settingsPageParams = {
 		leftSectionParams,
 		middleSectionParams,
-		rightSectionParams
+			rightSectionParams
 	}
 
 	return (

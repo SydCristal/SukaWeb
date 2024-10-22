@@ -5,6 +5,8 @@ import Layout from './components/Layout'
 import socket, { Emits } from './sockets'
 import styled from 'styled-components'
 import { C } from './utils'
+import TimerModal from './components/TimerModal'
+import { Timer } from './components/Common/Timer'
 
 const App = () => {
 		const [isConnected, setIsConnected] = useState(false)
@@ -19,7 +21,6 @@ const App = () => {
 		const [content, setContent] = useState(<div />)
 		const [loginError, setLoginError] = useState(null)
 		const [passwordError, setPasswordError] = useState(null)
-		console.log(configuration);
 
 		useEffect(() => {
 				usersRef.current = users
@@ -183,6 +184,7 @@ const App = () => {
 						<LoaderScreen $loading={loading}>
 								<Loader />
 						</LoaderScreen>
+						<TimerModal />
 						<AppContainer $loading={loading}>
 								{content}
 						</AppContainer>

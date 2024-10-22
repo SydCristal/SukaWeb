@@ -3,3 +3,4 @@ export { SectionContext, SectionProvider, useSectionContext } from './SectionCon
 export { GuestsContext, GuestsProvider, useGuestsContext } from './GuestsContext'
 export { LoadingContext, LoadingProvider, useLoadingContext } from './LoadingContext'
 export { UsersContext, UsersProvider, useUsersContext } from './UsersContext'
+export { TimerModalContext, TimerModalProvider, useTimerModalContext } from './TimerModalContext'

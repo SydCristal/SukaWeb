@@ -3,6 +3,7 @@ import { useConfigurationContext, useLoadingContext } from '../../contexts'
 import SettingsBlock from './'
 import { Emits } from '../../sockets'
 import _ from 'lodash'
+import { F } from '../../utils'
 
 const InstalationsBlock = memo(function InstalationsBlock() {
 	const { configuration } = useConfigurationContext()
@@ -11,15 +12,13 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 	const { allMode, allSettings, scenePresets, soundDesignPresets, instalations } = instalationSettings
 	const { updateConfiguration, previewConfiguration } = Emits
 	const [selectedInstalationId, setSelectedInstalationId] = useState(localStorage.getItem('selected-instalation-id') || instalations?.[0]?._id)
-	const findSelectedInstalation = () => {
-			if (!selectedInstalationId && !instalations?.length) return null// && !allMode) return null
-			let selectedInstalation = allMode ? allSettings : instalations.find(({ _id }) => _id === selectedInstalationId)
-			if (!selectedInstalation) selectedInstalation = instalations[0]
-			return selectedInstalation
-	}
-	const selectedInstalation = findSelectedInstalation()
+		const selectedInstalation = F.findSelectedInstalation({ instalations, allMode, allSettings, selectedInstalationId })
 
-	if (!selectedInstalationId || !selectedInstalation) return null
+		if (!selectedInstalationId || !selectedInstalation) return null
+
+		const timerIsActive = selectedInstalation?.timer?.active || instalationSettings.timer?.active
+		const snoozeState = selectedInstalation?.timer?.snooze || instalationSettings.timer?.snooze
+		const timerIcon = timerIsActive ? (snoozeState ? 'snooze' : 'wake') : 'timer'
 
 	const onSelectInstalation = id => {
 		localStorage.setItem('selected-instalation-id', id)
@@ -118,7 +117,8 @@ const InstalationsBlock = memo(function InstalationsBlock() {
 					name: selectedInstalation?.name,
 					onChange: val => onChange(val, 'elementTimer'),
 					...selectedInstalation?.timer
-			}
+			},
+			timerIcon
 	}
 
 	const rightSectionParams = {

@@ -5,13 +5,18 @@ import { useState } from 'react'
 import TimePicker from 'react-awesome-time-picker'
 import 'react-awesome-time-picker/assets/index.css'
 import moment from 'moment'
+import { Emits } from '../../sockets'
+import { useLoadingContext } from '../../contexts'
 
 const Timer = params => {//({ name = '', onTimer: active, wakeTime, snoozeTime, snooze, onChange }) => {
 		//const [active, setActive] = useState(false)
 		//const [wakeTime, setWakeTime] = useState(moment().hour(18).minute(0))
 		//const [snoozeTime, setSnoozeTime] = useState(moment().hour(0).minute(0))
 		//const [snooze, setSnooze] = useState(false)
-		const { name, onChange = val => console.log(val), ...timer } = params
+		const { updateConfiguration } = Emits
+		const { setLoading } = useLoadingContext()
+		const { objectType, _id, timer } = params
+		const name = params.name || objectType
 		const { active = false, snooze = false, wakeTime = [18, 0], snoozeTime = [0, 0] }	= timer
 		const wakeTimeMoment = moment().hour(wakeTime[0]).minute(wakeTime[1])
 		const snoozeTimeMoment = moment().hour(snoozeTime[0]).minute(snoozeTime[1])
@@ -20,6 +25,25 @@ const Timer = params => {//({ name = '', onTimer: active, wakeTime, snoozeTime, 
 				format,
 				showSecond: false,
 				use12Hours: true,
+		}
+
+		const onChange = newTimer => {
+				setLoading(true)
+				const newConfiguration = {}
+
+				switch (objectType) {
+						case 'area':
+								newConfiguration.areas = [{ _id, timer: newTimer }]
+								break
+						case 'instalation':
+								newConfiguration.instalations = [{ _id, timer: newTimer }]
+								break
+						default:
+								newConfiguration.timer = newTimer
+				}
+
+				if (objectType === 'light' || objectType === 'area') updateConfiguration({ lightSettings: newConfiguration })
+				if (objectType === 'instalations' || objectType === 'instalation') updateConfiguration({ instalationSettings: newConfiguration })
 		}
 
 		const setActive = () => {
@@ -108,15 +132,18 @@ const IconSwitch = styled.div`
 `
 
 const TimerExpanse = styled.div`
-		height: ${({ $active }) => $active ? '75' : '0'}px;
+		height: 75px;
 		pointer-eventa: ${({ $active }) => $active ? 'auto' : 'none'};
-		padding-right: 10px;
+		${C.IS_DESKTOP} {
+				padding-right: 10px;
+		};
 		overflow: hidden;
-		transition: height 0.3s;
+		transition: opacity 0.3s;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		width: 100%;
+		opacity: ${({ $active }) => $active ? '1' : '0.3'}
 `
 
 const TimerContainer = styled.div`
@@ -142,7 +169,6 @@ const TimerContainer = styled.div`
 const TimerSwitch = styled(Switch)`
 		&& {
 				display: flex;
-				flex: 1;
 				flex-direction: row-reverse;
 				justify-content: space-between;
 				width: 100%;
@@ -150,7 +176,7 @@ const TimerSwitch = styled(Switch)`
 						margin: 0;
 				};
 				${C.IS_DESKTOP} {
-						margin: 10px 0 10px;
+						margin: 10px 0 25px;
 						height: 38px;
 				};
 				${C.IS_MOBILE} {

@@ -1,29 +1,44 @@
 import styled from 'styled-components'
-import { C } from '../../utils'
-import { Select, Switch, Timer } from '../Common'
+import { C, F } from '../../utils'
+import { Select, Switch } from '../Common'
+import { useTimerModalContext } from '../../contexts'
 
 const MiddleSection = params => {
-		const { selectParams, toggleParams, switchParams, sectionTimerParams, elementTimerParams } = params
+		const { selectParams, toggleParams, switchParams, sectionTimerParams, elementTimerParams, timerIcon } = params
+		const { setTimerModal } = useTimerModalContext()
 
 		return (
 				<StlMiddleSection>
-						<Timer {...sectionTimerParams} />
-						<ElementContainer><div>
-								<SelectContainer>
-										<Select {...selectParams} />
-								</SelectContainer>
-								{toggleParams ? <Toggle {...toggleParams}>
-										all
-								</Toggle> : null}
-						</div>
-								<Timer {...elementTimerParams} />
+						<TimerIconContainer>
+								<TimerIcon src={F.getUrl('icons', timerIcon, false)} alt='timer' onPointerDown={() => setTimerModal(true)} />
+						</TimerIconContainer>
+						<ElementContainer>
+								<div>
+										<SelectContainer>
+												<Select {...selectParams} />
+										</SelectContainer>
+										{toggleParams ? <Toggle {...toggleParams}>
+												all
+										</Toggle> : null}
+								</div>
 						<div/>
 						<Switch {...switchParams} vertical={true} />
 						</ElementContainer>
-						<Timer {...elementTimerParams} />
 				</StlMiddleSection>
 		)
 }
+
+const TimerIconContainer = styled.div`
+		${C.IS_DESKTOP} {
+				margin-bottom: 10px;
+		};
+`
+
+const TimerIcon = styled.img`
+		width: 50px;
+		height: 50px;
+		cursor: pointer;
+`
 
 const ElementContainer = styled.div`
 		width: 100%;
@@ -50,7 +65,7 @@ const ElementContainer = styled.div`
 				justify-content: space-between;
 				> div {
 						flex-direction: column;
-						&:nth-child(3) {
+						&:nth-child(2) {
 								flex: 1;
 						};
 						&:first-child {
@@ -90,11 +105,6 @@ const StlMiddleSection = styled.section`
 				};
 				&:first-child {
 						display: none;
-				};
-				>	:last-child {
-						opacity: 0;
-						pointer-events: none;
-						height: 0;
 				};
 		};
 `
