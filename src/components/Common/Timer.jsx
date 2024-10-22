@@ -8,11 +8,7 @@ import moment from 'moment'
 import { Emits } from '../../sockets'
 import { useLoadingContext } from '../../contexts'
 
-const Timer = params => {//({ name = '', onTimer: active, wakeTime, snoozeTime, snooze, onChange }) => {
-		//const [active, setActive] = useState(false)
-		//const [wakeTime, setWakeTime] = useState(moment().hour(18).minute(0))
-		//const [snoozeTime, setSnoozeTime] = useState(moment().hour(0).minute(0))
-		//const [snooze, setSnooze] = useState(false)
+const Timer = params => {
 		const { updateConfiguration } = Emits
 		const { setLoading } = useLoadingContext()
 		const { objectType, _id, timer } = params
@@ -84,7 +80,7 @@ const Timer = params => {//({ name = '', onTimer: active, wakeTime, snoozeTime, 
 								</TimerContainer>
 								<IconSwitch onClick={() => setSnooze(!snooze)} $snooze={snooze}>
 										<img src={F.getUrl('icons', 'snooze', false)} alt='snooze' />
-										<img src={F.getUrl('icons', 'preset3', false)} alt='wake' />
+										<img src={F.getUrl('icons', 'wake', false)} alt='wake' />
 								</IconSwitch>
 						</TimerExpanse>
 				</StlTimer>
