@@ -15,9 +15,6 @@ const TimerModal = () => {
 	const selectedObject = section === 'light' ? F.findSelectedArea({ ...selectedBlock }) : F.findSelectedInstalation({ ...selectedBlock })
 	const objectTimerSettings = { objectType: section === 'light' ? 'area' : 'insyalation', ...selectedObject }
 
-	console.log(selectedBlock);
-	console.log(selectedObject);
-
 	return (
 		<TimerModalShadow onPointerDown={() => setTimerModal(false)}>
 			<StlTimerModal onPointerDown={e => e.stopPropagation()}>
