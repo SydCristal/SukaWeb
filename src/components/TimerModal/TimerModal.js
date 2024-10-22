@@ -46,10 +46,15 @@ const StlTimerModal = styled.div`
 	${C.IS_DESKTOP} {
 		width: 420px;
 		height: 350px;
+		padding: 25px;
 	};
 	${C.IS_MOBILE} {
-		width: 400px;
+		width: 342px;
 		height: 320px;
+		padding: 25px 20px;
+		.rc-time-picker {
+			width: 140px;
+		};
 	};
 	background-color: white;
 	display: flex;
@@ -58,7 +63,6 @@ const StlTimerModal = styled.div`
 	justify-content: space-between;
 	border: ${C.BORDER};
 	border-radius: 30px;
-	padding: 25px 25px;
 
 `
 
