@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { C, F } from '../../utils'
 import { useConfigurationContext, useLoadingContext, useUsersContext } from '../../contexts'
 import { Switch } from '../Common'
@@ -9,11 +9,19 @@ const Header = () => {
 		const { setLoading } = useLoadingContext()
 		const { users } = useUsersContext()
 		const { updateConfiguration, disconnect } = Emits
+		const { preview } = configuration
+
+		const togglePreview = () => {
+				if (!preview?.enabled) return
+				updateConfiguration({ preview: { ...preview, active: !preview?.active } })
+		}
 
 		const onTogglePower = () => {
 				setLoading(true)
 				updateConfiguration({ active: !configuration.active })
 		}
+
+		const logoClassName = `${preview?.active ? 'active' : ''} ${preview?.enabled ? 'enabled' : ''}`
 
 		return (
 				<StlHeader>
@@ -21,7 +29,7 @@ const Header = () => {
 								{!users && <Switch value={configuration.active} onChange={onTogglePower} />}
 						</HeaderSegment>
 						<HeaderSegment>
-								<img src={F.getUrl('icons', 'suka', false)} alt='suka' />
+								<img src={F.getUrl('icons', 'suka', false)} onClick={togglePreview} className={logoClassName} alt='suka' />
 						</HeaderSegment>
 						<HeaderSegment>
 								<LogOut onClick={disconnect}>
@@ -47,39 +55,64 @@ const StlHeader = styled.header`
 		padding: 64px 25px 30px;
 		height: 145px;
 	};
+	`
+
+const pulse = keyframes`
+		0% {
+			transform: scale(1);
+		}
+		70% {
+			transform: scale(1.1);
+		}
+		100% {
+			transform: scale(1);
+		}
 `
 
 const HeaderSegment = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	${C.IS_DESKTOP} {
-		height: 44px;
-		&:not(:nth-child(2)) {
-			width: ${C.SIDE_BLOCK_WIDTH};
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		${C.IS_DESKTOP} {
+				height: 44px;
+				&:not(:nth-child(2)) {
+						width: ${C.SIDE_BLOCK_WIDTH};
+				};
+				&:nth-child(2) {
+						min-width: ${C.CENTRAL_AREA_WIDTH};
+						margin: 0 32px;
+				};
+				> img {
+						max-height: 44px;
+				};
 		};
-		&:nth-child(2) {
-			min-width: ${C.CENTRAL_AREA_WIDTH};
-			margin: 0 32px;
+		${C.IS_MOBILE} {
+				&:first-child {
+						align-items: flex-start;
+				};
+				&:last-child {
+						align-items: flex-end;
+				};
+				flex: 1;
+				height: 53px;
+				> img {
+						max-height: 32px;
+				};
 		};
 		> img {
-			max-height: 44px;
+				opacity: 0.5;
+				transition: opacity 0.3s;
+				transform: scale(1);
+				&.enabled {
+						opacity: 1;
+						cursor: pointer;
+						&.active {
+								animation: ${pulse} 1s infinite;
+						};
+				};
 		};
-	};
-	${C.IS_MOBILE} {
-		&:first-child {
-			align-items: flex-start;
-		};
-		&:last-child {
-			align-items: flex-end;
-		};
-		flex: 1;
-		height: 53px;
-		> img {
-			max-height: 32px;
-		};
-	};
+};
 `
 
 const LogOut = styled.div`

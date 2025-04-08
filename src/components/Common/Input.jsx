@@ -1,10 +1,14 @@
 import styled from 'styled-components'
 import { C } from '../../utils'
 
-const Input = ({ onChange, ...restProps }) => {
+const Input = ({ onChange, onlyInteger, ...restProps }) => {
 		const inputProps = {
 				...restProps,
 				onChange: ({ target: { value } }) => {
+						if (onlyInteger && (!Number.isInteger(+value) || (+value < 0))) {
+								if (!Number.isInteger(+value) || (+value < 0)) return
+						}
+
 						onChange(value)
 				},
 				onBlur: ({ target: { value } }) => {

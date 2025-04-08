@@ -6,7 +6,6 @@ import socket, { Emits } from './sockets'
 import styled from 'styled-components'
 import { C } from './utils'
 import TimerModal from './components/TimerModal'
-import { Timer } from './components/Common/Timer'
 
 const App = () => {
 		const [isConnected, setIsConnected] = useState(false)
@@ -70,6 +69,7 @@ const App = () => {
 				}
 
 				function onUpdateConfiguration(updatedConfiguration) {
+						console.log('UPDATE', updatedConfiguration);
 						setLoading(false)
 						setConfiguration(updatedConfiguration)
 				}

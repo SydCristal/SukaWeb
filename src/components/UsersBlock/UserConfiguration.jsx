@@ -1,14 +1,17 @@
 import styled from 'styled-components'
 import { C } from '../../utils'
-import { Switch } from '../Common'
+import { Switch, Input } from '../Common'
 import { useUsersContext } from '../../contexts'
 import { EditableList } from './'
 
 const UserConfiguration = ({ isEdited, ownerId, highlightDisabled }) => {
 		const { editedList, configuration, setConfiguration } = useUsersContext()
-		const { lightSettings, instalationSettings } = configuration || { lightSettings: {}, instalationSettings: {} }
+		const { lightSettings, instalationSettings, preview } = configuration || {
+				lightSettings: {}, instalationSettings: {}, preview: {} }
 		const lightSettingsEnabled = lightSettings?.enabled !== undefined ? lightSettings?.enabled : Boolean(lightSettings)
 		const instalationSettingsEnabled = instalationSettings?.enabled !== undefined ? instalationSettings?.enabled : Boolean(instalationSettings)
+		const previerwEnabled = preview?.enabled
+		console.log(configuration)
 
 		const toggleLightSettingsEnabled = () => {
 				setConfiguration({ ...configuration, lightSettings: { ...lightSettings || {}, enabled: !lightSettingsEnabled }})
@@ -17,6 +20,11 @@ const UserConfiguration = ({ isEdited, ownerId, highlightDisabled }) => {
 		const toggleInstalationSettingsEnabled = () => {
 				setConfiguration({ ...configuration, instalationSettings: { ...instalationSettings || {}, enabled: !instalationSettingsEnabled } })
 		}
+
+		const togglePreviewEnabled = () => {
+				setConfiguration({ ...configuration, preview: { ...preview || {}, enabled: !previerwEnabled } })
+		}
+
 		const lightListProps = {
 				userId: ownerId,
 				section: 'lightSettings',
@@ -34,8 +42,27 @@ const UserConfiguration = ({ isEdited, ownerId, highlightDisabled }) => {
 				highlightLabel: highlightDisabled
 		}
 
+		const previewDurationInputProps = {
+				onlyInteger: true,
+				value: preview?.duration || 0,
+				onChange: value => {
+						setConfiguration({ ...configuration, preview: { ...preview, duration: value } })
+				},
+				label: 'duration'
+		}
+
 		return (
 				<StlUserConfiguration className={isEdited ? '' : 'collapsed'}>
+						<SectionSettingsBlock>
+								<SectionHeadingRow>
+										<SectionSettingsHeading>preview</SectionSettingsHeading>
+										<Switch value={previerwEnabled} onChange={togglePreviewEnabled} label={previerwEnabled ? 'enabled' : 'disabled'} />
+								</SectionHeadingRow>
+								<InputContainer className={isEdited && previerwEnabled ? '' : 'collapsed'}>
+										<Input {...previewDurationInputProps}></Input>
+										<label>sec</label>
+								</InputContainer>
+						</SectionSettingsBlock>
 						<SectionSettingsBlock>
 								<SectionHeadingRow>
 										<SectionSettingsHeading>light settings</SectionSettingsHeading>
@@ -57,6 +84,55 @@ const UserConfiguration = ({ isEdited, ownerId, highlightDisabled }) => {
 				</StlUserConfiguration>
 		)
 }
+
+const InputContainer = styled.div`
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		transition: all 0.3s;
+		overflow: hidden;
+		opacity: 1;
+		${C.IS_DESKTOP} {
+				height: 31px;
+		};
+		${C.IS_MOBILE} {
+				height: 22px;
+		};
+		&.collapsed {
+				height: 0;
+				padding: 0;
+				opacity: 0;
+		};
+		> input {
+				${C.IS_DESKTOP} {
+						margin: 0 30px 0 6px;
+						border: ${C.BORDER};
+						padding: 0 15px;
+						height: 31px;
+						flex: 1;
+						font-size: 20px;
+				};
+				${C.IS_MOBILE} {
+						margin: 0 10px 0 0;
+						padding: 0 10px;
+						height: 22px;
+						font-size: 16px;
+				};
+				min-height: 22px;
+				text-align: left;
+		};
+		> label {
+				text-align: left;
+				${C.IS_DESKTOP} {
+						width: 67px;
+						font-size: 20px;
+				};
+				${C.IS_MOBILE} {
+						width: 49px;
+				};
+		};
+`
 
 const StlUserConfiguration = styled.div`
 		overflow: hidden;
@@ -98,7 +174,7 @@ const SectionHeadingRow = styled.div`
 						margin-top: 0;
 						margin-right: 10px;
 				};
-		}
+		};
 `
 
 const SectionSettingsHeading = styled.h3`

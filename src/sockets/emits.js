@@ -60,12 +60,6 @@ export const Emits = {
 		}
 }
 
-const adminDummy = {
-  "password": "HOBOROBOT666",
-  "userName": "Suka Admin",
-  "isAdmin": true
-}
-
 const dataDummy = {
   "password": "HOBOROBOT666",
   "_id": "666fc86876dd710705fcd2d5",
