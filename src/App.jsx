@@ -69,14 +69,12 @@ const App = () => {
 				}
 
 				function onUpdateConfiguration(updatedConfiguration) {
-						console.log('UPDATE', updatedConfiguration);
 						setLoading(false)
 						setConfiguration(updatedConfiguration)
 				}
 
 				function onEditConfiguration(res) {
 						setLoading(false)
-						console.log(res)
 				}
 
 				function onUpdateGuests(updatedGuests) {
@@ -150,7 +148,7 @@ const App = () => {
 				socket.on('error', onError)
 
 				return () => {
-						console.log('CLEAN UP SOCKET')
+						//console.log('CLEAN UP SOCKET')
 						socket.off('connection', onConnection)
 						socket.off('disconnect', onDisconnect)
 						socket.off('createUser', onCreateUser)
